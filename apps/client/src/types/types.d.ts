@@ -22,6 +22,7 @@ export type TLineAttrsD = {
   tension: number;
   lineCap: string;
   lineJoin: string;
+  globalCompositeOperation?: string;
 };
 
 export type TLine = {
