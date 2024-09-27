@@ -2,11 +2,14 @@ import { Stage, Layer, Line } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
 import { TLine, TPosition } from "../../types/types";
 import { useRef, useState } from "react";
+import { Stage as TStage } from "konva/lib/Stage";
+import Konva from "konva";
 
 function Whiteboard() {
   const [tool, setTool] = useState("pen");
   const [lines, setLines] = useState<TLine[]>([]);
   const isDrawing = useRef(false);
+  const stageRef = useRef<TStage>(null);
 
   const handleMouseDown = (e: KonvaEventObject<MouseEvent>) => {
     isDrawing.current = true;
@@ -34,9 +37,54 @@ function Whiteboard() {
     isDrawing.current = false;
   };
 
+  const handleStageSave = () => {
+    console.log(stageRef.current?.toJSON());
+  };
+
+  const handleStageLoad = () => {
+    Konva.Node.create({
+      attrs: { width: 1422, height: 386 },
+      className: "Stage",
+      children: [
+        {
+          attrs: {},
+          className: "Layer",
+          children: [
+            {
+              attrs: {
+                points: [
+                  233.00152013726907, 175.00210305008676, 243.00158537921195, 174.0020910326577, 269.00175500826344, 168.0020189280833, 315.00205512120067,
+                  153.00183866664727, 389.002537911578, 139.00167042264033, 451.0029424116238, 131.0015742832078, 512.0033403874753, 122.00146612634619,
+                  568.0037057423555, 115.00138200434272, 623.0040645730413, 107.00128586491019, 668.0043581617842, 99.00118972547764, 705.004599556973,
+                  95.00114165576137, 720.0046974198872, 95.00114165576137, 725.0047300408587, 95.00114165576137, 729.0047561376358, 95.00114165576137,
+                  727.0047430892472, 101.00121376033579, 720.0046974198872, 112.00134595205552, 701.0045734601957, 132.00158630063686, 671.0043777343672,
+                  155.00186270150542, 628.0040971940127, 184.00221120694835, 593.0038688472126, 204.0024515555297, 554.0036144036354, 224.00269190411103,
+                  526.0034317261953, 236.00283611325983, 511.00333386328106, 241.0028962004052, 502.0032751455325, 245.00294427012145, 500.00326209714393,
+                  246.00295628755052, 499.0032555729496, 246.00295628755052, 506.00330124230965, 241.0028962004052, 510.0033273390868, 238.00286014811797,
+                ],
+                stroke: "#df4b26",
+                strokeWidth: 5,
+                tension: 0.5,
+                lineCap: "round",
+                lineJoin: "round",
+              },
+              className: "Line",
+            },
+          ],
+        },
+      ],
+    });
+  };
+
   return (
-    <section>
-      <Stage width={window.innerWidth} height={window.innerHeight} onMouseDown={handleMouseDown} onMousemove={handleMouseMove} onMouseup={handleMouseUp}>
+    <>
+      <Stage
+        width={window.innerWidth}
+        height={window.innerHeight}
+        onMouseDown={handleMouseDown}
+        onMousemove={handleMouseMove}
+        onMouseup={handleMouseUp}
+        ref={stageRef}>
         <Layer>
           {lines.map((line, i) => (
             <Line
@@ -60,7 +108,9 @@ function Whiteboard() {
         <option value="pen">Pen</option>
         <option value="eraser">Eraser</option>
       </select>
-    </section>
+      <button onClick={handleStageSave}>Save stage</button>
+      <button onClick={handleStageLoad}>Load stage</button>
+    </>
   );
 }
 

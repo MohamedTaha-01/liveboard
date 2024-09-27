@@ -1,19 +1,17 @@
-import { io } from "socket.io-client";
-import Whiteboard from "./components/Whiteboard/Whiteboard";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
+import WhiteboardPage from "./pages/WhiteboardPage";
 
 function App() {
-  const socket = io("http://localhost:3002", {
-    withCredentials: true,
-  });
-
   return (
-    <div>
-      <div>
-        <button>Create whiteboard</button>
-        <button>Join whiteboard</button>
-      </div>
-      <Whiteboard />
-    </div>
+    <main>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/whiteboard/:id" element={<WhiteboardPage />} />
+        </Routes>
+      </BrowserRouter>
+    </main>
   );
 }
 
