@@ -1,11 +1,11 @@
 import { Stage, Layer, Line } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
-import { TLine, TPosition } from "../../types/types";
+import { TLine, TPosition, TStageD } from "../../types/types";
 import { useRef, useState } from "react";
 import { Stage as TStage } from "konva/lib/Stage";
-import Konva from "konva";
 
 function Whiteboard() {
+  const [stage, setStage] = useState<TStageD | null>(null);
   const [tool, setTool] = useState("pen");
   const [lines, setLines] = useState<TLine[]>([]);
   const isDrawing = useRef(false);
@@ -42,7 +42,7 @@ function Whiteboard() {
   };
 
   const handleStageLoad = () => {
-    Konva.Node.create({
+    setStage({
       attrs: { width: 1422, height: 386 },
       className: "Stage",
       children: [
@@ -78,6 +78,17 @@ function Whiteboard() {
 
   return (
     <>
+      <select
+        value={tool}
+        onChange={(e) => {
+          setTool(e.target.value);
+        }}>
+        <option value="pen">Pen</option>
+        <option value="eraser">Eraser</option>
+      </select>
+      <button onClick={handleStageSave}>Save stage</button>
+      <button onClick={handleStageLoad}>Load stage</button>
+
       <Stage
         width={window.innerWidth}
         height={window.innerHeight}
@@ -85,6 +96,24 @@ function Whiteboard() {
         onMousemove={handleMouseMove}
         onMouseup={handleMouseUp}
         ref={stageRef}>
+        {stage &&
+          stage.children &&
+          stage.children.map((layer, i) => (
+            <Layer key={i}>
+              {layer.children &&
+                layer.children.map((line, j) => (
+                  <Line
+                    key={j}
+                    points={line.attrs.points}
+                    stroke={line.attrs.stroke}
+                    strokeWidth={line.attrs.strokeWidth}
+                    tension={line.attrs.tension}
+                    lineCap="round"
+                    lineJoin="round"
+                  />
+                ))}
+            </Layer>
+          ))}
         <Layer>
           {lines.map((line, i) => (
             <Line
@@ -100,16 +129,6 @@ function Whiteboard() {
           ))}
         </Layer>
       </Stage>
-      <select
-        value={tool}
-        onChange={(e) => {
-          setTool(e.target.value);
-        }}>
-        <option value="pen">Pen</option>
-        <option value="eraser">Eraser</option>
-      </select>
-      <button onClick={handleStageSave}>Save stage</button>
-      <button onClick={handleStageLoad}>Load stage</button>
     </>
   );
 }
