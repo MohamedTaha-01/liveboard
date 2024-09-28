@@ -1,9 +1,10 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Socket } from "socket.io-client";
 import { TSocketResponse } from "../types/types";
+import { SocketContext } from "../context/SocketProvider";
 
-function LandingPage({ socket, setWhiteboardId }: { socket: Socket; setWhiteboardId: (whiteboardId: string) => void }) {
+function LandingPage({ setWhiteboardId }: { setWhiteboardId: (whiteboardId: string) => void }) {
+  const { socket } = useContext(SocketContext)!;
   const navigate = useNavigate();
   const wbCodeInputRef = useRef<HTMLInputElement>(null);
 
@@ -14,15 +15,14 @@ function LandingPage({ socket, setWhiteboardId }: { socket: Socket; setWhiteboar
     navigate(`/whiteboard/${res.whiteboard.id}`);
   };
 
-  const handleWhiteboardJoin = () => {
+  const handleWhiteboardJoin = async () => {
     // TODO Validate input and if whiteboard exists
     const whiteboardCode = wbCodeInputRef.current?.value;
-    socket.emit("whiteboard:join", whiteboardCode, (res: TSocketResponse) => {
-      console.log(res);
-      if (res.status !== 200) return;
-      setWhiteboardId(res.whiteboard.id);
-      navigate(`/whiteboard/${res.whiteboard.id}`);
-    });
+    const res: TSocketResponse = await socket.emitWithAck("whiteboard:join", whiteboardCode);
+    console.log(res);
+    if (res.status !== 200) return;
+    setWhiteboardId(res.whiteboard.id);
+    navigate(`/whiteboard/${res.whiteboard.id}`);
   };
 
   return (

@@ -1,4 +1,9 @@
-function DebugMenu({ socketId, whiteboardId }: { socketId: string; whiteboardId: string }) {
+import { useContext } from "react";
+import { SocketContext } from "../../context/SocketProvider";
+
+function DebugMenu({ whiteboardId }: { whiteboardId: string }) {
+  const { socket } = useContext(SocketContext)!;
+
   return (
     <div
       style={{
@@ -14,7 +19,7 @@ function DebugMenu({ socketId, whiteboardId }: { socketId: string; whiteboardId:
       }}>
       <h4 style={{ textAlign: "center", marginBottom: 8 }}>DEBUG</h4>
       <p>
-        <b>Socket ID:</b> {socketId}
+        <b>Socket ID:</b> {socket && socket.id}
       </p>
       <p>
         <b>Whiteboard ID:</b> {whiteboardId}

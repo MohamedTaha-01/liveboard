@@ -1,32 +1,38 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import WhiteboardPage from "./pages/WhiteboardPage";
-import { io, Socket } from "socket.io-client";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DebugMenu from "./components/DebugMenu/DebugMenu";
-
-const socket: Socket = io("http://localhost:3002", {
-  withCredentials: true,
-});
+import { SocketContext } from "./context/SocketProvider";
+import { s } from "./socket";
 
 function App() {
   const [whiteboardId, setWhiteboardId] = useState<string>("");
-  const [socketId, setSocketId] = useState<string>("");
+  const { setSocket } = useContext(SocketContext)!;
 
-  socket.on("connect", () => {
-    console.log("connected with ID", socket.id);
-    setSocketId(socket.id!);
-  });
+  useEffect(() => {
+    s.on("connect", () => {
+      console.log("connected with ID", s.id);
+      setSocket(s);
+    });
+
+    return () => {
+      s.off("connect", () => {
+        console.log("disconnected");
+        setSocket(undefined);
+      });
+    };
+  }, []);
 
   return (
     <main>
       <BrowserRouter>
         <Routes>
-          <Route path="/whiteboard/:id" element={<WhiteboardPage socket={socket} whiteboardId={whiteboardId} />} />
-          <Route path="/" element={<LandingPage socket={socket} setWhiteboardId={setWhiteboardId} />} />
+          <Route path="/whiteboard/:id" element={<WhiteboardPage whiteboardId={whiteboardId} />} />
+          <Route path="/" element={<LandingPage setWhiteboardId={setWhiteboardId} />} />
         </Routes>
       </BrowserRouter>
-      {import.meta.env.VITE_PROD && <DebugMenu socketId={socketId} whiteboardId={whiteboardId} />}
+      {import.meta.env.VITE_PROD && <DebugMenu whiteboardId={whiteboardId} />}
     </main>
   );
 }
