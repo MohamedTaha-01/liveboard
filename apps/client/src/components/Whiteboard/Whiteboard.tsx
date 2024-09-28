@@ -1,10 +1,11 @@
 import { Stage, Layer, Line } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
-import { TLineD, TPosition } from "../../types/types";
+import { TLineD, TPosition, TSocketResponse } from "../../types/types";
 import { useRef, useState } from "react";
 import { Stage as TStage } from "konva/lib/Stage";
+import { Socket } from "socket.io-client";
 
-function Whiteboard({ socket, whiteboardId }) {
+function Whiteboard({ socket, whiteboardId }: { socket: Socket; whiteboardId: string }) {
   const [stageContent, setStageContent] = useState<TLineD[]>([]);
   const [tool, setTool] = useState("pen");
   const isDrawing = useRef(false);
@@ -15,7 +16,18 @@ function Whiteboard({ socket, whiteboardId }) {
     const pos: { x: number; y: number } = e.target.getStage()?.getPointerPosition() as TPosition;
     setStageContent([
       ...stageContent,
-      { attrs: { points: [pos.x, pos.y], stroke: "#df4b26", strokeWidth: 5, tension: 0.5, lineCap: "round", lineJoin: "round" }, className: "Line" },
+      {
+        attrs: {
+          points: [pos.x, pos.y],
+          stroke: "#df4b26",
+          strokeWidth: 5,
+          tension: 0.5,
+          lineCap: "round",
+          lineJoin: "round",
+          globalCompositeOperation: tool === "pen" ? "source-over" : "destination-out",
+        },
+        className: "Line",
+      },
     ]);
   };
 
@@ -37,7 +49,7 @@ function Whiteboard({ socket, whiteboardId }) {
   const handleMouseUp = () => {
     isDrawing.current = false;
     const lastLine = stageContent[stageContent.length - 1];
-    socket.emit("whiteboard:draw", whiteboardId, lastLine, (res) => {
+    socket.emit("whiteboard:draw", whiteboardId, lastLine, (res: TSocketResponse) => {
       console.log("emmited draw order, received status:", res.status);
     });
   };
@@ -72,6 +84,7 @@ function Whiteboard({ socket, whiteboardId }) {
           tension: 0.5,
           lineCap: "round",
           lineJoin: "round",
+          globalCompositeOperation: "source-over",
         },
         className: "Line",
       },
@@ -150,6 +163,9 @@ function Whiteboard({ socket, whiteboardId }) {
             ))}
         </Layer>
       </Stage>
+      <div style={{ position: "absolute", top: 20, right: 20 }}>
+        <p>Tool: {tool}</p>
+      </div>
     </>
   );
 }

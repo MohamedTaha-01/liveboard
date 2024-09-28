@@ -1,3 +1,14 @@
+export type TSocketResponse = {
+  status: number;
+  message?: string;
+  error?: string;
+  [x: string]: IWhiteboard | never;
+};
+export interface IWhiteboard {
+  id: string;
+  content: TStageD[];
+}
+
 export type TStageD = {
   attrs: object;
   className: string;

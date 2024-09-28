@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Socket } from "socket.io-client";
+import { TSocketResponse } from "../types/types";
 
 function LandingPage({ socket, setWhiteboardId }: { socket: Socket; setWhiteboardId: (whiteboardId: string) => void }) {
   const navigate = useNavigate();
@@ -16,7 +17,8 @@ function LandingPage({ socket, setWhiteboardId }: { socket: Socket; setWhiteboar
   const handleWhiteboardJoin = () => {
     // TODO Validate input and if whiteboard exists
     const whiteboardCode = wbCodeInputRef.current?.value;
-    socket.emit("whiteboard:join", whiteboardCode, (res) => {
+    socket.emit("whiteboard:join", whiteboardCode, (res: TSocketResponse) => {
+      console.log(res);
       if (res.status !== 200) return;
       setWhiteboardId(res.whiteboard.id);
       navigate(`/whiteboard/${res.whiteboard.id}`);
