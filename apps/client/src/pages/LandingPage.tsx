@@ -6,12 +6,11 @@ function LandingPage({ socket, setWhiteboardId }: { socket: Socket; setWhiteboar
   const navigate = useNavigate();
   const wbCodeInputRef = useRef<HTMLInputElement>(null);
 
-  const handleWhiteboardCreate = () => {
-    socket.emit("whiteboard_create", (res) => {
-      console.log("created:", res);
-      setWhiteboardId(res.whiteboard.id);
-      navigate(`/whiteboard/${res.whiteboard.id}`);
-    });
+  const handleWhiteboardCreate = async () => {
+    const res = await socket.emitWithAck("whiteboard_create");
+    console.log("created:", res);
+    setWhiteboardId(res.whiteboard.id);
+    navigate(`/whiteboard/${res.whiteboard.id}`);
   };
 
   const handleWhiteboardJoin = () => {
@@ -30,6 +29,7 @@ function LandingPage({ socket, setWhiteboardId }: { socket: Socket; setWhiteboar
       &nbsp;&nbsp;
       <input ref={wbCodeInputRef} type="text" placeholder="whiteboard code" />
       <button onClick={handleWhiteboardJoin}>Join whiteboard</button>
+      <p>{import.meta.env.VITE_PROD}</p>
     </section>
   );
 }
