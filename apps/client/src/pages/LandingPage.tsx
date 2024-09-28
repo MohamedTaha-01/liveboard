@@ -1,30 +1,35 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Socket } from "socket.io-client";
 
-function LandingPage() {
+function LandingPage({ socket, setWhiteboardId }: { socket: Socket; setWhiteboardId: (whiteboardId: string) => void }) {
   const navigate = useNavigate();
   const wbCodeInputRef = useRef<HTMLInputElement>(null);
 
-  const handleCreateWhiteboard = async () => {
-    const res = await fetch("http://localhost:3002/whiteboard", {
-      method: "POST",
+  const handleWhiteboardCreate = () => {
+    socket.emit("whiteboard_create", (res) => {
+      console.log("created:", res);
+      setWhiteboardId(res.whiteboard.id);
+      navigate(`/whiteboard/${res.whiteboard.id}`);
     });
-    const data = await res.json();
-    navigate(`/whiteboard/${data.whiteboard.id}`);
   };
 
-  const handleJoinWhiteboard = async () => {
+  const handleWhiteboardJoin = () => {
     // TODO Validate input and if whiteboard exists
     const whiteboardCode = wbCodeInputRef.current?.value;
-    navigate(`/whiteboard/${whiteboardCode}`);
+    socket.emit("whiteboard_join", whiteboardCode, (res) => {
+      if (res.status !== 200) return;
+      setWhiteboardId(res.whiteboard.id);
+      navigate(`/whiteboard/${res.whiteboard.id}`);
+    });
   };
 
   return (
     <section>
-      <button onClick={handleCreateWhiteboard}>Create whiteboard</button>
+      <button onClick={handleWhiteboardCreate}>Create whiteboard</button>
       &nbsp;&nbsp;
       <input ref={wbCodeInputRef} type="text" placeholder="whiteboard code" />
-      <button onClick={handleJoinWhiteboard}>Join whiteboard</button>
+      <button onClick={handleWhiteboardJoin}>Join whiteboard</button>
     </section>
   );
 }

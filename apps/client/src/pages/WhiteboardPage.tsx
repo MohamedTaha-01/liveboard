@@ -1,18 +1,9 @@
-import { io } from "socket.io-client";
 import Whiteboard from "../components/Whiteboard/Whiteboard";
 
-function WhiteboardPage() {
-  const socket = io("http://localhost:3002", {
-    withCredentials: true,
-  });
-
-  socket.on("connect", () => {
-    console.log("connected with ID", socket.id);
-  });
-
+function WhiteboardPage({ socket, whiteboardId }) {
   return (
     <section>
-      <Whiteboard />
+      <Whiteboard socket={socket} whiteboardId={whiteboardId} />
     </section>
   );
 }
