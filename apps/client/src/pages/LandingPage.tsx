@@ -7,7 +7,7 @@ function LandingPage({ socket, setWhiteboardId }: { socket: Socket; setWhiteboar
   const wbCodeInputRef = useRef<HTMLInputElement>(null);
 
   const handleWhiteboardCreate = async () => {
-    const res = await socket.emitWithAck("whiteboard_create");
+    const res = await socket.emitWithAck("whiteboard:create");
     console.log("created:", res);
     setWhiteboardId(res.whiteboard.id);
     navigate(`/whiteboard/${res.whiteboard.id}`);
@@ -16,7 +16,7 @@ function LandingPage({ socket, setWhiteboardId }: { socket: Socket; setWhiteboar
   const handleWhiteboardJoin = () => {
     // TODO Validate input and if whiteboard exists
     const whiteboardCode = wbCodeInputRef.current?.value;
-    socket.emit("whiteboard_join", whiteboardCode, (res) => {
+    socket.emit("whiteboard:join", whiteboardCode, (res) => {
       if (res.status !== 200) return;
       setWhiteboardId(res.whiteboard.id);
       navigate(`/whiteboard/${res.whiteboard.id}`);
@@ -29,7 +29,6 @@ function LandingPage({ socket, setWhiteboardId }: { socket: Socket; setWhiteboar
       &nbsp;&nbsp;
       <input ref={wbCodeInputRef} type="text" placeholder="whiteboard code" />
       <button onClick={handleWhiteboardJoin}>Join whiteboard</button>
-      <p>{import.meta.env.VITE_PROD}</p>
     </section>
   );
 }

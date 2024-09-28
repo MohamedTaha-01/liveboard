@@ -37,7 +37,7 @@ function Whiteboard({ socket, whiteboardId }) {
   const handleMouseUp = () => {
     isDrawing.current = false;
     const lastLine = stageContent[stageContent.length - 1];
-    socket.emit("whiteboard_draw", whiteboardId, lastLine, (res) => {
+    socket.emit("whiteboard:draw", whiteboardId, lastLine, (res) => {
       console.log("emmited draw order, received status:", res.status);
     });
   };
@@ -109,8 +109,8 @@ function Whiteboard({ socket, whiteboardId }) {
     ]);
   };
 
-  socket.on("client_whiteboard_draw", (newLine: TLineD) => {
-    console.log("received draw order");
+  socket.on("whiteboard:render", (newLine: TLineD) => {
+    console.log("received render order");
     setStageContent((prev) => [...prev, newLine]);
   });
 
