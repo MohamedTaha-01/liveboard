@@ -1,5 +1,6 @@
 import { Server, Socket } from "socket.io";
 import Whiteboard from "../models/Whiteboard";
+import WhiteboardLogger from "../libs/WhiteboardLogger";
 
 let storage: Whiteboard[] = [];
 
@@ -8,8 +9,7 @@ export const whiteboardHandler = (io: Server, socket: Socket) => {
     const whiteboard = new Whiteboard();
     storage.push(whiteboard);
     socket.join(whiteboard.id);
-    console.log("\x1b[35m[!] whiteboard created:", whiteboard.id, "\x1b[0m");
-
+    WhiteboardLogger.logCreate(whiteboard.id);
     callback({ status: 201, whiteboard });
   });
 
@@ -17,7 +17,7 @@ export const whiteboardHandler = (io: Server, socket: Socket) => {
     const whiteboard = storage.find((wb) => wb.id === id);
     if (!whiteboard) return { status: 404, error: "Whiteboard not found" };
     socket.join(whiteboard.id);
-    console.log("\x1b[35m[!] whiteboard joined:", id, "\x1b[0m");
+    WhiteboardLogger.logJoin(whiteboard.id);
 
     callback({
       status: 200,
@@ -26,12 +26,7 @@ export const whiteboardHandler = (io: Server, socket: Socket) => {
   });
 
   socket.on("whiteboard:draw", (id: string, line, callback: Function) => {
-    console.group("\x1b[33m[!] received draw order: \x1b[0m");
-    console.log("\x1b[30m- from socket:", socket.id, "\x1b[0m");
-    console.log("\x1b[30m- at whiteboard:", id, "\x1b[0m");
-    console.log("\x1b[30m- in room:", io.sockets.adapter.rooms, "\x1b[0m");
-    console.groupEnd();
-
+    WhiteboardLogger.logDraw(io.sockets.adapter.rooms, socket.id, id);
     socket.to(id).emit("whiteboard:render", line);
     callback({
       status: 200,
