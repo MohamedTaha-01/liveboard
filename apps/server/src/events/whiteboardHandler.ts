@@ -27,6 +27,7 @@ export const whiteboardHandler = (io: Server, socket: Socket) => {
 
   socket.on("whiteboard:draw", (id: string, line, callback: Function) => {
     WhiteboardLogger.logDraw(io.sockets.adapter.rooms, socket.id, id);
+    storage.find((wb) => wb.id === id)?.content.push(line);
     socket.to(id).emit("whiteboard:render", line);
     callback({
       status: 200,
