@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Whiteboard from "../components/Whiteboard/Whiteboard";
 import { SocketContext } from "../context/SocketProvider";
 import { useContext } from "react";
@@ -9,6 +9,7 @@ function WhiteboardPage() {
   const { socket } = useContext(SocketContext)!;
   const { setWhiteboardId } = useContext(WhiteboardContext)!;
   const location = useLocation();
+  const navigate = useNavigate();
 
   if (socket) {
     const joinWhiteboard = async () => {
@@ -16,7 +17,9 @@ function WhiteboardPage() {
 
       const whiteboardCode = location.pathname.split("/whiteboard/")[1];
       const res: TSocketResponse = await socket.emitWithAck("whiteboard:join", whiteboardCode);
-      console.log(res);
+      if (res.status === 403) {
+        navigate(`/`);
+      }
       if (res.status !== 200) return;
       setWhiteboardId(res.whiteboard.id);
     };

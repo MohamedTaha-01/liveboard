@@ -11,6 +11,7 @@ function Whiteboard() {
   const { whiteboardId } = useContext(WhiteboardContext)!;
 
   const [stageContent, setStageContent] = useState<TLineD[]>([]);
+  const [visibility, setVisibility] = useState<string>("private");
   const [tool, setTool] = useState("pen");
   const [size, setSize] = useState("5");
   const isDrawing = useRef(false);
@@ -127,6 +128,20 @@ function Whiteboard() {
     ]);
   };
 
+  const handleChangeVisibility = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newVisibility = e.target.value;
+    if (newVisibility !== "private" && newVisibility !== "public") return;
+    setVisibility(e.target.value);
+
+    const res = await socket.emitWithAck("whiteboard:change-visibility", whiteboardId, newVisibility);
+    console.log(res);
+
+    if (res.status !== 200) {
+      setVisibility(res.whiteboard.visibility);
+      return;
+    }
+  };
+
   socket.on("whiteboard:render", (newLine: TLineD) => {
     console.log("received render order");
     setStageContent((prev) => [...prev, newLine]);
@@ -134,6 +149,10 @@ function Whiteboard() {
 
   return (
     <>
+      <select value={visibility} onChange={handleChangeVisibility}>
+        <option value="private">Private</option>
+        <option value="public">Public</option>
+      </select>
       <select
         value={tool}
         onChange={(e) => {
@@ -181,7 +200,8 @@ function Whiteboard() {
             ))}
         </Layer>
       </Stage>
-      <div style={{ position: "absolute", top: 20, right: 20 }}>
+      <div style={{ position: "absolute", top: 20, right: 20, textAlign: "right" }}>
+        <p>Visibility: {visibility}</p>
         <p>Tool: {tool}</p>
         <p>Size: {size}</p>
       </div>
