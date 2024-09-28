@@ -2,9 +2,12 @@ import { useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { TSocketResponse } from "../types/types";
 import { SocketContext } from "../context/SocketProvider";
+import { WhiteboardContext } from "../context/WhiteboardProvider";
 
-function LandingPage({ setWhiteboardId }: { setWhiteboardId: (whiteboardId: string) => void }) {
+function LandingPage() {
   const { socket } = useContext(SocketContext)!;
+  const { setWhiteboardId } = useContext(WhiteboardContext)!;
+
   const navigate = useNavigate();
   const wbCodeInputRef = useRef<HTMLInputElement>(null);
 

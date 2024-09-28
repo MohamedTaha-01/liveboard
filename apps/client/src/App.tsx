@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import DebugMenu from "./components/DebugMenu/DebugMenu";
 import { SocketContext } from "./context/SocketProvider";
 import { s } from "./socket";
 import Router from "./components/Router/Router";
 
 function App() {
-  const [whiteboardId, setWhiteboardId] = useState<string>("");
   const { setSocket } = useContext(SocketContext)!;
 
   useEffect(() => {
@@ -24,8 +23,8 @@ function App() {
 
   return (
     <main>
-      <Router whiteboardId={whiteboardId} setWhiteboardId={setWhiteboardId} />
-      {import.meta.env.VITE_PROD && <DebugMenu whiteboardId={whiteboardId} />}
+      <Router />
+      {import.meta.env.VITE_PROD && <DebugMenu />}
     </main>
   );
 }

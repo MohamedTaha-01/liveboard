@@ -1,8 +1,10 @@
 import { useContext } from "react";
 import { SocketContext } from "../../context/SocketProvider";
+import { WhiteboardContext } from "../../context/WhiteboardProvider";
 
-function DebugMenu({ whiteboardId }: { whiteboardId: string }) {
+function DebugMenu() {
   const { socket } = useContext(SocketContext)!;
+  const { whiteboardId } = useContext(WhiteboardContext)!;
 
   return (
     <div
@@ -22,7 +24,7 @@ function DebugMenu({ whiteboardId }: { whiteboardId: string }) {
         <b>Socket ID:</b> {socket && socket.id}
       </p>
       <p>
-        <b>Whiteboard ID:</b> {whiteboardId}
+        <b>Whiteboard ID:</b> {whiteboardId && whiteboardId}
       </p>
     </div>
   );

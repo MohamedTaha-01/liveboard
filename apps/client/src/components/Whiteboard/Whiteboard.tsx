@@ -4,9 +4,12 @@ import { TLineD, TPosition, TSocketResponse } from "../../types/types";
 import { useContext, useRef, useState } from "react";
 import { Stage as TStage } from "konva/lib/Stage";
 import { SocketContext } from "../../context/SocketProvider";
+import { WhiteboardContext } from "../../context/WhiteboardProvider";
 
-function Whiteboard({ whiteboardId }: { whiteboardId: string }) {
+function Whiteboard() {
   const { socket } = useContext(SocketContext)!;
+  const { whiteboardId } = useContext(WhiteboardContext)!;
+
   const [stageContent, setStageContent] = useState<TLineD[]>([]);
   const [tool, setTool] = useState("pen");
   const [size, setSize] = useState("5");
