@@ -170,8 +170,8 @@ function Whiteboard({ socket, whiteboardId }: { socket: Socket; whiteboardId: st
                 stroke={line.attrs.stroke}
                 strokeWidth={line.attrs.strokeWidth}
                 tension={line.attrs.tension}
-                lineCap="round"
-                lineJoin="round"
+                lineCap={line.attrs.lineCap}
+                lineJoin={line.attrs.lineJoin}
                 globalCompositeOperation={line.attrs.globalCompositeOperation === "destination-out" ? "destination-out" : "source-over"}
               />
             ))}
