@@ -31,8 +31,8 @@ export type TLineAttrsD = {
   stroke: string;
   strokeWidth: number;
   tension: number;
-  lineCap: string;
-  lineJoin: string;
+  lineCap: "butt" | "round" | "square";
+  lineJoin: "bevel" | "miter" | "round";
   globalCompositeOperation?: string;
 };
 
