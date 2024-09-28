@@ -8,6 +8,7 @@ import { Socket } from "socket.io-client";
 function Whiteboard({ socket, whiteboardId }: { socket: Socket; whiteboardId: string }) {
   const [stageContent, setStageContent] = useState<TLineD[]>([]);
   const [tool, setTool] = useState("pen");
+  const [size, setSize] = useState("5");
   const isDrawing = useRef(false);
   const stageRef = useRef<TStage>(null);
 
@@ -20,7 +21,7 @@ function Whiteboard({ socket, whiteboardId }: { socket: Socket; whiteboardId: st
         attrs: {
           points: [pos.x, pos.y],
           stroke: "#df4b26",
-          strokeWidth: 5,
+          strokeWidth: parseInt(size),
           tension: 0.5,
           lineCap: "round",
           lineJoin: "round",
@@ -137,6 +138,19 @@ function Whiteboard({ socket, whiteboardId }: { socket: Socket; whiteboardId: st
         <option value="pen">Pen</option>
         <option value="eraser">Eraser</option>
       </select>
+      <select
+        value={size}
+        onChange={(e) => {
+          setSize(e.target.value);
+        }}>
+        <option value={2}>2</option>
+        <option value={5}>5</option>
+        <option value={8}>8</option>
+        <option value={12}>12</option>
+        <option value={16}>16</option>
+        <option value={50}>50</option>
+        <option value={100}>100</option>
+      </select>
       <button onClick={handleStageSave}>Save stage</button>
       <button onClick={handleStageLoad}>Load stage</button>
 
@@ -165,6 +179,7 @@ function Whiteboard({ socket, whiteboardId }: { socket: Socket; whiteboardId: st
       </Stage>
       <div style={{ position: "absolute", top: 20, right: 20 }}>
         <p>Tool: {tool}</p>
+        <p>Size: {size}</p>
       </div>
     </>
   );
