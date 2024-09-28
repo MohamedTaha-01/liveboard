@@ -20,14 +20,13 @@ const io = new Server(server, {
 let storage: Whiteboard[] = [];
 
 io.on("connection", (socket) => {
-  console.log("a user connected:", socket.id);
+  console.log("[!] client connected:", socket.id);
 
   socket.on("whiteboard_create", (callback: Function) => {
     const whiteboard = new Whiteboard();
     storage.push(whiteboard);
     socket.join(whiteboard.id);
-    console.log("whiteboard created:", whiteboard.id);
-    console.log(io.sockets.adapter.rooms);
+    console.log("\x1b[35m[!] whiteboard created:", whiteboard.id, "\x1b[0m");
 
     callback({ status: 201, whiteboard });
   });
@@ -36,8 +35,7 @@ io.on("connection", (socket) => {
     const whiteboard = storage.find((wb) => wb.id === id);
     if (!whiteboard) return { status: 404, error: "Whiteboard not found" };
     socket.join(whiteboard.id);
-    console.log("whiteboard joined:", id);
-    console.log(io.sockets.adapter.rooms);
+    console.log("\x1b[35m[!] whiteboard joined:", id, "\x1b[0m");
 
     callback({
       status: 200,
@@ -46,10 +44,11 @@ io.on("connection", (socket) => {
   });
 
   socket.on("whiteboard_draw", (id: string, line, callback: Function) => {
-    console.log("[!] received draw order, sending to connected sockets");
-    console.log("[!] room:", io.sockets.adapter.rooms);
-    console.log("[!] whiteboard:", id);
-    console.log("[!] from socket:", socket.id);
+    console.group("\x1b[33m[!] received draw order: \x1b[0m");
+    console.log("\x1b[30m- from socket:", socket.id, "\x1b[0m");
+    console.log("\x1b[30m- at whiteboard:", id, "\x1b[0m");
+    console.log("\x1b[30m- in room:", io.sockets.adapter.rooms, "\x1b[0m");
+    console.groupEnd();
 
     socket.to(id).emit("client_whiteboard_draw", line);
     callback({
@@ -59,5 +58,5 @@ io.on("connection", (socket) => {
 });
 
 server.listen(3002, () => {
-  console.log("server running at http://localhost:3000");
+  console.log("\x1b[30mserver running at http://localhost:3000 \x1b[0m");
 });
