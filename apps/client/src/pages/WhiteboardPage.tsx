@@ -4,6 +4,7 @@ import { SocketContext } from "../context/SocketProvider";
 import { useContext, useState } from "react";
 import { WhiteboardContext } from "../context/WhiteboardProvider";
 import { TSocketResponse } from "../types/types";
+import ToolSettings from "../components/Whiteboard/ToolSettings";
 
 function WhiteboardPage() {
   const { socket } = useContext(SocketContext)!;
@@ -38,8 +39,6 @@ function WhiteboardPage() {
 
   const { whiteboardId } = useContext(WhiteboardContext)!;
 
-  const [tool, setTool] = useState("pen");
-  const [size, setSize] = useState("5");
   const [visibility, setVisibility] = useState<string>("private");
 
   const handleChangeVisibility = async (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -59,7 +58,7 @@ function WhiteboardPage() {
   return (
     (socket && (
       <>
-        <Whiteboard tool={tool} size={size} visibility={visibility} />
+        <Whiteboard visibility={visibility} />
         <section style={{ position: "absolute", top: 0, left: 0 }}>
           <p>Visibility</p>
           <select value={visibility} onChange={handleChangeVisibility}>
@@ -67,30 +66,7 @@ function WhiteboardPage() {
             <option value="public">Public</option>
           </select>
         </section>
-        <section style={{ position: "absolute", top: 40, left: 0 }}>
-          <p>Tool</p>
-          <select
-            value={tool}
-            onChange={(e) => {
-              setTool(e.target.value);
-            }}>
-            <option value="pen">Pen</option>
-            <option value="eraser">Eraser</option>
-          </select>
-          <select
-            value={size}
-            onChange={(e) => {
-              setSize(e.target.value);
-            }}>
-            <option value={2}>2</option>
-            <option value={5}>5</option>
-            <option value={8}>8</option>
-            <option value={12}>12</option>
-            <option value={16}>16</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-          </select>
-        </section>
+        <ToolSettings />
       </>
     )) || <p>Not connected</p>
   );

@@ -5,8 +5,9 @@ import { useContext, useRef, useState } from "react";
 import { Stage as TStage } from "konva/lib/Stage";
 import { SocketContext } from "../../context/SocketProvider";
 import { WhiteboardContext } from "../../context/WhiteboardProvider";
+import { ToolSettingsContext } from "../../context/ToolSettingsProvider";
 
-function Whiteboard({ tool, size, visibility }: { tool: string; size: string; visibility: string }) {
+function Whiteboard({ visibility }: { visibility: string }) {
   const { socket } = useContext(SocketContext)!;
   const { whiteboardId } = useContext(WhiteboardContext)!;
 
@@ -14,6 +15,8 @@ function Whiteboard({ tool, size, visibility }: { tool: string; size: string; vi
 
   const isDrawing = useRef(false);
   const stageRef = useRef<TStage>(null);
+
+  const toolSettings = useContext(ToolSettingsContext);
 
   const handleMouseDown = (e: KonvaEventObject<MouseEvent>) => {
     isDrawing.current = true;
@@ -23,12 +26,12 @@ function Whiteboard({ tool, size, visibility }: { tool: string; size: string; vi
       {
         attrs: {
           points: [pos.x, pos.y],
-          stroke: "#df4b26",
-          strokeWidth: parseInt(size),
+          stroke: toolSettings.color,
+          strokeWidth: parseInt(toolSettings.size),
           tension: 0.5,
           lineCap: "round",
           lineJoin: "round",
-          globalCompositeOperation: tool === "pen" ? "source-over" : "destination-out",
+          globalCompositeOperation: toolSettings.tool === "pen" ? "source-over" : "destination-out",
         },
         className: "Line",
       },
@@ -163,8 +166,9 @@ function Whiteboard({ tool, size, visibility }: { tool: string; size: string; vi
       </Stage>
       <div style={{ position: "absolute", top: 20, right: 20, textAlign: "right" }}>
         <p>Visibility: {visibility}</p>
-        <p>Tool: {tool}</p>
-        <p>Size: {size}</p>
+        <p>Tool: {toolSettings.tool}</p>
+        <p>Size: {toolSettings.size}</p>
+        <p>Size: {toolSettings.color}</p>
       </div>
     </>
   );
