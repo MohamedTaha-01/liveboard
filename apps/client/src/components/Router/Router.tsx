@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import LandingPage from "../../pages/LandingPage";
+import HomePage from "../../pages/HomePage";
 import WhiteboardPage from "../../pages/WhiteboardPage";
 
 function Router() {
@@ -7,7 +7,7 @@ function Router() {
     <BrowserRouter>
       <Routes>
         <Route path="/whiteboard/:id" element={<WhiteboardPage />} />
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { SocketContext } from "../context/SocketProvider";
 import { WhiteboardContext } from "../context/WhiteboardProvider";
 
-function LandingPage() {
+function HomePage() {
   const { socket } = useContext(SocketContext)!;
   const { setWhiteboardId } = useContext(WhiteboardContext)!;
 
@@ -32,4 +32,4 @@ function LandingPage() {
   );
 }
 
-export default LandingPage;
+export default HomePage;
