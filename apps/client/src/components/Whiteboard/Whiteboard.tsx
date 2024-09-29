@@ -6,14 +6,12 @@ import { Stage as TStage } from "konva/lib/Stage";
 import { SocketContext } from "../../context/SocketProvider";
 import { WhiteboardContext } from "../../context/WhiteboardProvider";
 
-function Whiteboard() {
+function Whiteboard({ tool, size, visibility }: { tool: string; size: string; visibility: string }) {
   const { socket } = useContext(SocketContext)!;
   const { whiteboardId } = useContext(WhiteboardContext)!;
 
   const [stageContent, setStageContent] = useState<TLineD[]>([]);
-  const [visibility, setVisibility] = useState<string>("private");
-  const [tool, setTool] = useState("pen");
-  const [size, setSize] = useState("5");
+
   const isDrawing = useRef(false);
   const stageRef = useRef<TStage>(null);
 
@@ -128,20 +126,6 @@ function Whiteboard() {
     ]);
   };
 
-  const handleChangeVisibility = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newVisibility = e.target.value;
-    if (newVisibility !== "private" && newVisibility !== "public") return;
-    setVisibility(e.target.value);
-
-    const res = await socket.emitWithAck("whiteboard:change-visibility", whiteboardId, newVisibility);
-    console.log(res);
-
-    if (res.status !== 200) {
-      setVisibility(res.whiteboard.visibility);
-      return;
-    }
-  };
-
   socket.on("whiteboard:render", (newLine: TLineD) => {
     console.log("received render order");
     setStageContent((prev) => [...prev, newLine]);
@@ -149,33 +133,10 @@ function Whiteboard() {
 
   return (
     <>
-      <select value={visibility} onChange={handleChangeVisibility}>
-        <option value="private">Private</option>
-        <option value="public">Public</option>
-      </select>
-      <select
-        value={tool}
-        onChange={(e) => {
-          setTool(e.target.value);
-        }}>
-        <option value="pen">Pen</option>
-        <option value="eraser">Eraser</option>
-      </select>
-      <select
-        value={size}
-        onChange={(e) => {
-          setSize(e.target.value);
-        }}>
-        <option value={2}>2</option>
-        <option value={5}>5</option>
-        <option value={8}>8</option>
-        <option value={12}>12</option>
-        <option value={16}>16</option>
-        <option value={50}>50</option>
-        <option value={100}>100</option>
-      </select>
-      <button onClick={handleStageSave}>Save stage</button>
-      <button onClick={handleStageLoad}>Load stage</button>
+      <div style={{ position: "absolute", top: 0, right: 0 }}>
+        <button onClick={handleStageSave}>Save stage</button>
+        <button onClick={handleStageLoad}>Load stage</button>
+      </div>
 
       <Stage
         width={window.innerWidth}
