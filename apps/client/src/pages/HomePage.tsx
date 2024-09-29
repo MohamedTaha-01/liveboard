@@ -14,12 +14,12 @@ function HomePage() {
     const res = await socket.emitWithAck("whiteboard:create");
     console.log("created:", res);
     setWhiteboardId(res.whiteboard.id);
-    navigate(`/whiteboard/${res.whiteboard.id}`);
+    navigate(`/whiteboards/${res.whiteboard.id}`);
   };
 
   const handleWhiteboardJoin = async () => {
     // TODO Validate input and if whiteboard exists
-    navigate(`/whiteboard/${wbCodeInputRef.current?.value}`);
+    navigate(`/whiteboards/${wbCodeInputRef.current?.value}`);
   };
 
   return (

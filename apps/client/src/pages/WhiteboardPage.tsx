@@ -13,11 +13,18 @@ function WhiteboardPage() {
 
   if (socket) {
     const joinWhiteboard = async () => {
-      console.log("joining whiteboard", location.pathname.split("/whiteboard/")[1]);
+      console.log("joining whiteboard", location.pathname.split("/whiteboards/")[1]);
 
-      const whiteboardCode = location.pathname.split("/whiteboard/")[1];
+      const whiteboardCode = location.pathname.split("/whiteboards/")[1];
       const res: TSocketResponse = await socket.emitWithAck("whiteboard:join", whiteboardCode);
+      console.log(res);
       if (res.status === 403) {
+        console.log("not authorized");
+        navigate(`/`);
+      }
+      if (res.status === 404) {
+        console.log("whiteboard not found");
+
         navigate(`/`);
       }
       if (res.status !== 200) return;
