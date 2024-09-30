@@ -87,7 +87,7 @@ function Whiteboard({ whiteboard, setWhiteboard }: { whiteboard: IWhiteboard; se
       };
     });
     const movedElement = whiteboard.content.find((el) => el.id === id);
-    const res: TSocketResponse = await socket.emitWithAck("whiteboard:move-element", whiteboard.id, movedElement);
+    const res: TSocketResponse = await socket.emitWithAck("whiteboard:move", whiteboard.id, movedElement);
     console.log("emmited move order, received status:", res.status);
   };
 

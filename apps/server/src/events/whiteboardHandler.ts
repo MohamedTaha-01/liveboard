@@ -57,7 +57,7 @@ export const whiteboardHandler = (io: Server, socket: Socket) => {
     }
   });
 
-  socket.on("whiteboard:move-element", (id: string, element, callback: Function) => {
+  socket.on("whiteboard:move", (id: string, element, callback: Function) => {
     console.log("move element", element);
 
     if (!id) return callback({ status: 400, error: "Missing whiteboard ID" });
