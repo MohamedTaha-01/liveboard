@@ -1,14 +1,16 @@
+import { TWhiteboardElement } from "./types";
+
 /**
  * Whiteboard global state
  * @prop {string} id - The whiteboard's id
  * @prop {string} owner - The whiteboard's owner id
- * @prop {TLineD[]} content - The whiteboard's content
+ * @prop {TWhiteboardElement[]} content - The whiteboard's content
  * @prop {string} visibility - The whiteboard's visibility
  */
 export interface IWhiteboard {
   id: string | undefined;
   owner: string | undefined;
-  content: TLineD[];
+  content: TWhiteboardElement[];
   visibility: "public" | "private";
 }
 

@@ -1,6 +1,6 @@
-import { Stage, Layer, Line } from "react-konva";
+import { Stage, Layer, Line, Rect } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
-import { TLineD, TPosition, TSocketResponse } from "../../types/types";
+import { TWhiteboardElement, TPosition, TSocketResponse, TWhiteboardRectAttrs } from "../../types/types";
 import { useContext, useRef } from "react";
 import { Stage as TStage } from "konva/lib/Stage";
 import { SocketContext } from "../../context/SocketProvider";
@@ -65,13 +65,39 @@ function Whiteboard({ whiteboard, setWhiteboard }: { whiteboard: IWhiteboard; se
     });
   };
 
+  const handleDragStart = (e: KonvaEventObject<MouseEvent>) => {
+    const id = e.target.id();
+    setWhiteboard((prev) => {
+      return {
+        ...prev,
+        content: prev.content.map((el: TWhiteboardElement) => {
+          return { ...el, isDragging: el.id === id };
+        }),
+      };
+    });
+  };
+  const handleDragEnd = async (e: KonvaEventObject<MouseEvent>) => {
+    const id = e.target.id();
+    setWhiteboard((prev) => {
+      return {
+        ...prev,
+        content: prev.content.map((el: TWhiteboardElement) => {
+          return { ...el, isDragging: false };
+        }),
+      };
+    });
+    const movedElement = whiteboard.content.find((el) => el.id === id);
+    const res: TSocketResponse = await socket.emitWithAck("whiteboard:move-element", whiteboard.id, movedElement);
+    console.log("emmited move order, received status:", res.status);
+  };
+
   //! DEBUG // //
   const handleStageSave = () => {
     console.log(stageRef.current?.toJSON());
   };
   //! // // // //
 
-  socket.on("whiteboard:render", (newLine: TLineD) => {
+  socket.on("whiteboard:render", (newLine: TWhiteboardElement) => {
     console.log("received render order");
     setWhiteboard((prev) => {
       return { ...prev, content: [...prev.content, newLine] };
@@ -80,7 +106,7 @@ function Whiteboard({ whiteboard, setWhiteboard }: { whiteboard: IWhiteboard; se
 
   return (
     <>
-      <div style={{ position: "absolute", top: 0, right: 0 }}>
+      <div style={{ position: "absolute", top: 0, right: 0, zIndex: 100 }}>
         <button onClick={handleStageSave}>Save stage</button>
       </div>
 
@@ -94,18 +120,38 @@ function Whiteboard({ whiteboard, setWhiteboard }: { whiteboard: IWhiteboard; se
         <Layer>
           {whiteboard &&
             whiteboard.content &&
-            whiteboard.content.map((line, j) => (
-              <Line
-                key={j}
-                points={line.attrs.points}
-                stroke={line.attrs.stroke}
-                strokeWidth={line.attrs.strokeWidth}
-                tension={line.attrs.tension}
-                lineCap={line.attrs.lineCap}
-                lineJoin={line.attrs.lineJoin}
-                globalCompositeOperation={line.attrs.globalCompositeOperation === "destination-out" ? "destination-out" : "source-over"}
-              />
-            ))}
+            whiteboard.content.map((element: TWhiteboardElement, i) => {
+              if (element.className === "Line")
+                return (
+                  <Line
+                    key={i}
+                    points={element.attrs.points}
+                    stroke={element.attrs.stroke}
+                    strokeWidth={element.attrs.strokeWidth}
+                    tension={element.attrs.tension}
+                    lineCap={element.attrs.lineCap}
+                    lineJoin={element.attrs.lineJoin}
+                    globalCompositeOperation={element.attrs.globalCompositeOperation === "destination-out" ? "destination-out" : "source-over"}
+                  />
+                );
+              else if (element.className === "Rect")
+                return (
+                  <Rect
+                    key={i}
+                    id={element.id}
+                    x={element.attrs.x}
+                    y={element.attrs.y}
+                    width={element.attrs.width}
+                    height={element.attrs.height}
+                    fill={element.attrs.fill}
+                    draggable
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                    opacity={element.isDragging ? 0.7 : 1}
+                  />
+                );
+              else return <></>;
+            })}
         </Layer>
       </Stage>
     </>

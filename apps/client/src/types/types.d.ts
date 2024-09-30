@@ -6,24 +6,25 @@ export type TSocketResponse = {
   error?: string;
   [x: string]: IWhiteboard | never;
 };
-export type TStageD = {
+export type TWhiteboardStage = {
   attrs: object;
   className: string;
-  children: TLayerD[];
+  children: TWhiteboardLayer[];
 };
 
-export type TLayerD = {
+export type TWhiteboardLayer = {
   attrs: object;
   className: string;
-  children: TLineD[];
+  children: TWhiteboardElement[];
 };
 
-export type TLineD = {
-  attrs: TLineAttrsD;
+export type TWhiteboardElement = {
+  attrs: TWhiteboardLineAttrs | TWhiteboardRectAttrs;
   className: string;
+  id?: string;
 };
 
-export type TLineAttrsD = {
+export type TWhiteboardLineAttrs = {
   points: number[];
   stroke: string;
   strokeWidth: number;
@@ -33,9 +34,13 @@ export type TLineAttrsD = {
   globalCompositeOperation?: string;
 };
 
-export type TLine = {
-  points: number[];
-  tool: string;
+export type TWhiteboardRectAttrs = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  fill: string;
+  draggable: boolean;
 };
 
 export type TPosition = {

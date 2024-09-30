@@ -67,7 +67,7 @@ function WhiteboardPage() {
             <option value="public">Public</option>
           </select>
         </section>
-        <ToolSettings />
+        <ToolSettings whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
         <section style={{ position: "absolute", right: 0, top: 40, textAlign: "right" }}>
           <p>ID: {whiteboard.id}</p>
           <p>Owner: {whiteboard.owner}</p>
