@@ -1,6 +1,6 @@
 import { Stage, Layer, Line, Rect } from "react-konva";
 import { KonvaEventObject } from "konva/lib/Node";
-import { TWhiteboardElement, TPosition, TSocketResponse, TWhiteboardRectAttrs } from "../../types/types";
+import { TWhiteboardElement, TPosition, TSocketResponse } from "../../types/types";
 import { useContext, useRef } from "react";
 import { Stage as TStage } from "konva/lib/Stage";
 import { SocketContext } from "../../context/SocketProvider";

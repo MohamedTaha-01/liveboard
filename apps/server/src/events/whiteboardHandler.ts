@@ -79,7 +79,8 @@ export const whiteboardHandler = (io: Server, socket: Socket) => {
 
   //TODO: when visibility is changed from public to private, all connected sockets should be kicked
   socket.on("whiteboard:change-visibility", (id: string, visibility: "public" | "private", callback: Function) => {
-    if (!id) callback({ status: 400, error: "Missing whiteboard ID" });
+    if (!id) return callback({ status: 400, error: "Missing whiteboard ID" });
+    if (!visibility || (visibility !== "public" && visibility !== "private")) return callback({ status: 400, error: "Invalid visibility option" });
     try {
       const whiteboard = storage.find((wb) => wb.id === id);
       if (!whiteboard) return callback({ status: 404, error: "Whiteboard not found" });
@@ -87,7 +88,7 @@ export const whiteboardHandler = (io: Server, socket: Socket) => {
       whiteboard.visibility = visibility;
       callback({
         status: 200,
-        whiteboard,
+        visibility: whiteboard.visibility,
       });
     } catch (error) {
       callback({ status: 500, error: "Internal server error" });

@@ -38,13 +38,23 @@ function WhiteboardPage() {
 
   const handleChangeVisibility = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newVisibility = e.target.value;
+    const oldVisibility = whiteboard.visibility;
     if (newVisibility !== "private" && newVisibility !== "public") return;
+    if (newVisibility === oldVisibility) return;
+
+    setWhiteboard((prev) => {
+      return { ...prev, visibility: newVisibility };
+    });
 
     const res = await socket.emitWithAck("whiteboard:change-visibility", whiteboard.id, newVisibility);
-    console.log(res);
-    if (res.status !== 200) return;
+
+    if (res.status !== 200) {
+      return setWhiteboard((prev) => {
+        return { ...prev, visibility: oldVisibility };
+      });
+    }
     setWhiteboard((prev) => {
-      return { ...prev, visibility: res.whiteboard.visibility };
+      return { ...prev, visibility: newVisibility };
     });
   };
 
