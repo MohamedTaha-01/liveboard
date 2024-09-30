@@ -4,6 +4,7 @@ export type TSocketResponse = {
   error?: string;
   [x: string]: IWhiteboard | never;
 };
+// TODO: IWhiteboard is duplicated. Remove this one if possible.
 export interface IWhiteboard {
   id: string;
   content: TStageD[];

@@ -10,6 +10,7 @@ function HomePage() {
 
   const handleWhiteboardCreate = async () => {
     const res = await socket.emitWithAck("whiteboard:create");
+    // TODO handle res errors
     console.log("created:", res);
     navigate(`/whiteboards/${res.whiteboard.id}`);
   };
