@@ -58,7 +58,7 @@ function WhiteboardPage() {
   return (
     (socket && (
       <>
-        <Whiteboard visibility={visibility} />
+        <Whiteboard />
         <section style={{ position: "absolute", top: 0, left: 0 }}>
           <p>Visibility</p>
           <select value={visibility} onChange={handleChangeVisibility}>

@@ -7,7 +7,7 @@ import { SocketContext } from "../../context/SocketProvider";
 import { WhiteboardContext } from "../../context/WhiteboardProvider";
 import { ToolSettingsContext } from "../../context/ToolSettingsProvider";
 
-function Whiteboard({ visibility }: { visibility: string }) {
+function Whiteboard() {
   const { socket } = useContext(SocketContext)!;
   const { whiteboardId } = useContext(WhiteboardContext)!;
 
@@ -164,12 +164,6 @@ function Whiteboard({ visibility }: { visibility: string }) {
             ))}
         </Layer>
       </Stage>
-      <div style={{ position: "absolute", top: 20, right: 20, textAlign: "right" }}>
-        <p>Visibility: {visibility}</p>
-        <p>Tool: {toolSettings.tool}</p>
-        <p>Size: {toolSettings.size}</p>
-        <p>Size: {toolSettings.color}</p>
-      </div>
     </>
   );
 }
