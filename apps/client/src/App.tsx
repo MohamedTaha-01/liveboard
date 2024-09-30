@@ -12,11 +12,21 @@ function App() {
       console.log("connected with ID", s.id);
       setSocket(s);
     });
+    s.on("connect_error", (error) => {
+      if (s.active) {
+        console.log("connection error, reconnecting automatically");
+      } else {
+        console.log("connection error, not reconnecting");
+      }
+    });
 
     return () => {
       s.off("connect", () => {
         console.log("disconnected");
         setSocket(undefined);
+      });
+      s.off("connect_error", () => {
+        console.log("disconnected");
       });
     };
   }, []);

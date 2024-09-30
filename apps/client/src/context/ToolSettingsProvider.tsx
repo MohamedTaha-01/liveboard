@@ -1,14 +1,5 @@
 import React, { createContext, useState } from "react";
-import { TWhiteboardTool } from "../types/whiteboard";
-
-interface IToolSettingsContext {
-  tool: TWhiteboardTool;
-  size: number;
-  color: string;
-  changeTool: (t: TWhiteboardTool) => void;
-  changeSize: (s: number) => void;
-  changeColor: (c: string) => void;
-}
+import { IToolSettingsContext, TWhiteboardTool } from "../types/whiteboard";
 
 export const ToolSettingsContext = createContext<IToolSettingsContext | undefined>(undefined);
 

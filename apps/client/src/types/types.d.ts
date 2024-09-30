@@ -1,15 +1,11 @@
+import { IWhiteboard } from "./whiteboard";
+
 export type TSocketResponse = {
   status: number;
   message?: string;
   error?: string;
   [x: string]: IWhiteboard | never;
 };
-// TODO: IWhiteboard is duplicated. Remove this one if possible.
-export interface IWhiteboard {
-  id: string;
-  content: TStageD[];
-}
-
 export type TStageD = {
   attrs: object;
   className: string;

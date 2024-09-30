@@ -6,20 +6,19 @@
  * @prop {string} visibility - The whiteboard's visibility
  */
 export interface IWhiteboard {
-  id: string;
-  owner: string;
+  id: string | undefined;
+  owner: string | undefined;
   content: TLineD[];
-  visibility: string;
+  visibility: "public" | "private";
 }
 
-/**
- * Whiteboard tool settings (local) state
- * @prop {string} tool - The selected tool
- * @prop {string} size - The selected tool size
- */
-export interface IToolSettings {
-  tool: string;
-  size: string;
+export interface IToolSettingsContext {
+  tool: TWhiteboardTool;
+  size: number;
+  color: string;
+  changeTool: (t: TWhiteboardTool) => void;
+  changeSize: (s: number) => void;
+  changeColor: (c: string) => void;
 }
 
 export type TWhiteboardTool = "pen" | "eraser";

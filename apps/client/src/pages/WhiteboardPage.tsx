@@ -1,20 +1,22 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import Whiteboard from "../components/Whiteboard/Whiteboard";
 import { SocketContext } from "../context/SocketProvider";
-import { useContext, useState } from "react";
-import { WhiteboardContext } from "../context/WhiteboardProvider";
+import { useContext, useEffect, useState } from "react";
 import { TSocketResponse } from "../types/types";
 import ToolSettings from "../components/Whiteboard/ToolSettings";
+import { IWhiteboard } from "../types/whiteboard";
 
 function WhiteboardPage() {
   const { socket } = useContext(SocketContext)!;
-  const { setWhiteboardId } = useContext(WhiteboardContext)!;
   const location = useLocation();
   const navigate = useNavigate();
 
-  if (!socket) {
-    navigate("/");
-  }
+  const [whiteboard, setWhiteboard] = useState<IWhiteboard>({
+    id: undefined,
+    owner: undefined,
+    content: [],
+    visibility: "private",
+  });
 
   const joinWhiteboard = async () => {
     console.log("joining whiteboard", location.pathname.split("/whiteboards/")[1]);
@@ -31,43 +33,46 @@ function WhiteboardPage() {
       navigate(`/`);
     }
     if (res.status !== 200) return;
-    setWhiteboardId(res.whiteboard.id);
+    setWhiteboard(res.whiteboard);
   };
-
-  joinWhiteboard();
-
-  // TODO: everything below is added here temporarily
-
-  const { whiteboardId } = useContext(WhiteboardContext)!;
-
-  const [visibility, setVisibility] = useState<string>("private");
 
   const handleChangeVisibility = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newVisibility = e.target.value;
     if (newVisibility !== "private" && newVisibility !== "public") return;
-    setVisibility(e.target.value);
 
-    const res = await socket.emitWithAck("whiteboard:change-visibility", whiteboardId, newVisibility);
+    const res = await socket.emitWithAck("whiteboard:change-visibility", whiteboard.id, newVisibility);
     console.log(res);
-
-    if (res.status !== 200) {
-      setVisibility(res.whiteboard.visibility);
-      return;
-    }
+    if (res.status !== 200) return;
+    setWhiteboard((prev) => {
+      return { ...prev, visibility: res.whiteboard.visibility };
+    });
   };
+
+  useEffect(() => {
+    if (!socket) {
+      console.log("socket not connected");
+      return navigate("/");
+    }
+    joinWhiteboard();
+  }, [socket]);
 
   return (
     (socket && (
       <>
-        <Whiteboard />
+        <Whiteboard whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
         <section style={{ position: "absolute", top: 0, left: 0 }}>
           <p>Visibility</p>
-          <select value={visibility} onChange={handleChangeVisibility}>
+          <select value={whiteboard.visibility} onChange={handleChangeVisibility}>
             <option value="private">Private</option>
             <option value="public">Public</option>
           </select>
         </section>
         <ToolSettings />
+        <section style={{ position: "absolute", right: 0, top: 40, textAlign: "right" }}>
+          <p>ID: {whiteboard.id}</p>
+          <p>Owner: {whiteboard.owner}</p>
+          <p>Vis: {whiteboard.visibility}</p>
+        </section>
       </>
     )) || <p>Not connected</p>
   );
