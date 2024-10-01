@@ -11,6 +11,8 @@ import { SocketContext } from '../../context/SocketProvider'
 import { ToolSettingsContext } from '../../context/ToolSettingsProvider'
 import { IWhiteboard } from '../../types/whiteboard'
 import { TIMEOUT_DELAY } from '../../libs/constants'
+import LineRenderer from './LineRenderer'
+import RectRenderer from './RectRenderer'
 
 function Whiteboard({
   whiteboard,
@@ -28,9 +30,10 @@ function Whiteboard({
 
   const handleMouseDown = (e: KonvaEventObject<MouseEvent>) => {
     isDrawing.current = true
-    const pos: { x: number; y: number } = e.target
+    const pos: TPosition = e.target
       .getStage()
       ?.getPointerPosition() as TPosition
+
     setWhiteboard((prev) => {
       return {
         ...prev,
@@ -149,43 +152,17 @@ function Whiteboard({
         <Layer>
           {whiteboard &&
             whiteboard.content &&
-            whiteboard.content.map((element: TWhiteboardElement, i) => {
-              if (element.className === 'Line')
-                return (
-                  <Line
-                    key={i}
-                    points={element.attrs.points}
-                    stroke={element.attrs.stroke}
-                    strokeWidth={element.attrs.strokeWidth}
-                    tension={element.attrs.tension}
-                    lineCap={element.attrs.lineCap}
-                    lineJoin={element.attrs.lineJoin}
-                    globalCompositeOperation={
-                      element.attrs.globalCompositeOperation ===
-                      'destination-out'
-                        ? 'destination-out'
-                        : 'source-over'
-                    }
-                  />
-                )
-              else if (element.className === 'Rect')
-                return (
-                  <Rect
-                    key={i}
-                    id={element.id}
-                    x={element.attrs.x}
-                    y={element.attrs.y}
-                    width={element.attrs.width}
-                    height={element.attrs.height}
-                    fill={element.attrs.fill}
-                    draggable
-                    onDragStart={handleDragStart}
-                    onDragEnd={handleDragEnd}
-                    opacity={element.isDragging ? 0.7 : 1}
-                  />
-                )
-              else return <></>
-            })}
+            whiteboard.content.map((element: TWhiteboardElement, i) => (
+              <>
+                <LineRenderer key={`line-${i}`} element={element} />
+                <RectRenderer
+                  key={`rect-${i}`}
+                  element={element}
+                  handleDragStart={handleDragStart}
+                  handleDragEnd={handleDragEnd}
+                />
+              </>
+            ))}
         </Layer>
       </Stage>
     </>
