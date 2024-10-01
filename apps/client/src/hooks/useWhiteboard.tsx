@@ -1,9 +1,9 @@
 import { TSocketResponse } from '../types/types'
-import { useSocket } from './useSocket'
+import { useSocketEvents } from './useSocketEvents'
 
 export const useWhiteboard = () => {
   const { emitCreateWhiteboard, emitJoinWhiteboard, emitChangeVisibility } =
-    useSocket()
+    useSocketEvents()
   const createWhiteboard = async (): Promise<TSocketResponse> => {
     return await emitCreateWhiteboard()
   }

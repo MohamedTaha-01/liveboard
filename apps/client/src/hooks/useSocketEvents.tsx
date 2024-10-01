@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { SocketContext } from '../context/SocketProvider'
 import { TSocketResponse } from '../types/types'
 
-export const useSocket = () => {
+export const useSocketEvents = () => {
   const { socket } = useContext(SocketContext)
 
   const _checkSocketConnection = (): Promise<void> => {

@@ -113,12 +113,6 @@ function Whiteboard({
     console.log('emmited move order, received status:', res.status)
   }
 
-  //! DEBUG // //
-  const handleStageSave = () => {
-    console.log(stageRef.current?.toJSON())
-  }
-  //! // // // //
-
   socket.on('whiteboard:render', (newLine: TWhiteboardElement) => {
     console.log('received render order')
     setWhiteboard((prev) => {
@@ -128,9 +122,15 @@ function Whiteboard({
 
   return (
     <>
-      <div style={{ position: 'absolute', top: 0, right: 0, zIndex: 100 }}>
-        <button onClick={handleStageSave}>Save stage</button>
-      </div>
+      {import.meta.env.VITE_PROD && (
+        //! DEBUG // //
+        <div style={{ position: 'absolute', top: 0, right: 0, zIndex: 100 }}>
+          <button onClick={() => console.log(stageRef.current?.toJSON())}>
+            Stage to JSON
+          </button>
+        </div>
+        //! // // // //
+      )}
 
       <Stage
         width={window.innerWidth}
