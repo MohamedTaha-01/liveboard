@@ -5,9 +5,11 @@ import { useContext, useEffect, useState } from 'react'
 import { TSocketResponse } from '../types/types'
 import ToolSettings from '../components/Whiteboard/ToolSettings'
 import { IWhiteboard } from '../types/whiteboard'
+import { useWhiteboard } from '../hooks/useWhiteboard'
 
 function WhiteboardPage() {
   const { socket } = useContext(SocketContext)!
+  const { joinWhiteboard } = useWhiteboard()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -18,28 +20,30 @@ function WhiteboardPage() {
     visibility: 'private',
   })
 
-  const joinWhiteboard = async () => {
-    console.log(
-      'joining whiteboard',
-      location.pathname.split('/whiteboards/')[1]
-    )
-
-    const whiteboardCode = location.pathname.split('/whiteboards/')[1]
-    const res: TSocketResponse = await socket.emitWithAck(
-      'whiteboard:join',
-      whiteboardCode
-    )
-    console.log(res)
-    if (res.status === 404) {
-      console.log('whiteboard not found')
-      navigate(`/`)
+  const handleJoinWhiteboard = async () => {
+    try {
+      const whiteboardCode = location.pathname.split('/whiteboards/')[1]
+      const res: TSocketResponse = await joinWhiteboard(whiteboardCode)
+      switch (res.status) {
+        case 200:
+          setWhiteboard(res.whiteboard)
+          break
+        case 404:
+          console.log('whiteboard not found')
+          navigate(`/`)
+          break
+        case 403:
+          console.log('not authorized')
+          navigate(`/`)
+          break
+        default:
+          navigate(`/`)
+          break
+      }
+    } catch (err: unknown) {
+      const error = err as Error
+      console.log(error.message)
     }
-    if (res.status === 403) {
-      console.log('not authorized')
-      navigate(`/`)
-    }
-    if (res.status !== 200) return
-    setWhiteboard(res.whiteboard)
   }
 
   const handleChangeVisibility = async (
@@ -85,7 +89,7 @@ function WhiteboardPage() {
       console.log('socket not connected')
       return navigate('/')
     }
-    joinWhiteboard()
+    handleJoinWhiteboard()
   }, [socket])
 
   return (

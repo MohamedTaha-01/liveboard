@@ -1,18 +1,23 @@
-import { useContext, useRef } from 'react'
+import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { SocketContext } from '../context/SocketProvider'
+import { TSocketResponse } from '../types/types'
+import { useWhiteboard } from '../hooks/useWhiteboard'
 
 function HomePage() {
-  const { socket } = useContext(SocketContext)!
-
+  const { createWhiteboard } = useWhiteboard()
   const navigate = useNavigate()
+
   const wbCodeInputRef = useRef<HTMLInputElement>(null)
 
   const handleWhiteboardCreate = async () => {
-    const res = await socket.emitWithAck('whiteboard:create')
-    // TODO handle res errors
-    console.log('created:', res)
-    navigate(`/whiteboards/${res.whiteboard.id}`)
+    try {
+      const res: TSocketResponse = await createWhiteboard()
+      if (res.status !== 201) return console.log(res.error)
+      navigate(`/whiteboards/${res.whiteboard.id}`)
+    } catch (err: unknown) {
+      const error = err as Error
+      console.log(error.message)
+    }
   }
 
   const handleWhiteboardJoin = async () => {

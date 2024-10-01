@@ -27,7 +27,10 @@ export const whiteboardHandler = (io: Server, socket: Socket) => {
         return callback({ status: 404, error: 'Whiteboard not found' })
 
       if (whiteboard.visibility === 'private' && whiteboard.owner !== socket.id)
-        return callback({ status: 403, error: 'Whiteboard is private' })
+        return callback({
+          status: 403,
+          error: "You don't have permission to join this whiteboard.",
+        })
 
       socket.join(whiteboard.id)
       WhiteboardLogger.logJoin(whiteboard.id)
