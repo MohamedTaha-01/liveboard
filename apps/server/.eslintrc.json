@@ -1,0 +1,27 @@
+{
+  "extends": "eslint:recommended",
+  "env": {
+    "es6": true
+  },
+  "globals": {
+    "window": "writable",
+    "module": "writable",
+    "describe": "readonly",
+    "it": "readonly",
+    "expect": "readonly",
+    "_": "readonly",
+    "document": "readonly",
+    "localStorage": "readonly",
+    "console": "readonly",
+    "setInterval": "readonly",
+    "setTimeout": "readonly",
+    "require": "readonly"
+  },
+  "rules": {
+    "semi": ["error", "never"],
+    "quotes": ["error", "single"]
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  }
+}

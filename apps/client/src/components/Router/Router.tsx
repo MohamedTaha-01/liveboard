@@ -1,7 +1,7 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import HomePage from "../../pages/HomePage";
-import WhiteboardPage from "../../pages/WhiteboardPage";
-import NoMatchPage from "../../pages/NoMatchPage";
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import HomePage from '../../pages/HomePage'
+import WhiteboardPage from '../../pages/WhiteboardPage'
+import NoMatchPage from '../../pages/NoMatchPage'
 
 function Router() {
   return (
@@ -12,7 +12,7 @@ function Router() {
         <Route path="*" element={<NoMatchPage />} />
       </Routes>
     </BrowserRouter>
-  );
+  )
 }
 
-export default Router;
+export default Router
