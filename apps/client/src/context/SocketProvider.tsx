@@ -32,7 +32,7 @@ function SocketProvider({ children }: { children: ReactNode }) {
       setSocket(s)
       setConnectionState(EConnectionState.Connected)
     })
-    s.on('connect_error', (error) => {
+    s.on('connect_error', (_error) => {
       if (s.active) {
         console.log('connection error, reconnecting...')
         setConnectionState(EConnectionState.Connecting)
