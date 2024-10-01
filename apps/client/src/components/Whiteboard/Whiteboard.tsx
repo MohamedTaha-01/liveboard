@@ -82,9 +82,19 @@ function Whiteboard({
         .timeout(TIMEOUT_DELAY)
         .emitWithAck('whiteboard:draw', whiteboard.id, lastLine)
       console.log('emmited draw order, received status:', res.status)
+      if (res.status !== 200) {
+        setWhiteboard((prev) => {
+          return { ...prev, content: prev.content.slice(0, -1) }
+        })
+        return
+      }
     } catch (err) {
       const error: Error = err as Error
-      console.log(error.message)
+      setWhiteboard((prev) => {
+        return { ...prev, content: prev.content.slice(0, -1) }
+      })
+      console.log(error.message) // operation has timed out
+      return
     }
   }
 
