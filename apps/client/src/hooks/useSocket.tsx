@@ -25,5 +25,17 @@ export const useSocket = () => {
     return await socket!.emitWithAck('whiteboard:join', id)
   }
 
-  return { emitCreateWhiteboard, emitJoinWhiteboard }
+  const emitChangeVisibility = async (
+    id: string,
+    visibility: string
+  ): Promise<TSocketResponse> => {
+    await _checkSocketConnection()
+    return await socket!.emitWithAck(
+      'whiteboard:change-visibility',
+      id,
+      visibility
+    )
+  }
+
+  return { emitCreateWhiteboard, emitJoinWhiteboard, emitChangeVisibility }
 }

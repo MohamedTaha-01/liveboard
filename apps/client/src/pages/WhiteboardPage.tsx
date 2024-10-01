@@ -9,7 +9,7 @@ import { useWhiteboard } from '../hooks/useWhiteboard'
 
 function WhiteboardPage() {
   const { socket } = useContext(SocketContext)!
-  const { joinWhiteboard } = useWhiteboard()
+  const { joinWhiteboard, changeWhiteboardVisibility } = useWhiteboard()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -58,11 +58,7 @@ function WhiteboardPage() {
       return { ...prev, visibility: newVisibility }
     })
 
-    const res = await socket.emitWithAck(
-      'whiteboard:change-visibility',
-      whiteboard.id,
-      newVisibility
-    )
+    const res = await changeWhiteboardVisibility(whiteboard.id, newVisibility)
 
     if (res.status !== 200) {
       return setWhiteboard((prev) => {
