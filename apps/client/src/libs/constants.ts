@@ -1,1 +1,1 @@
-export const TIMEOUT_DELAY = 30000
+export const TIMEOUT_DELAY = 5000
