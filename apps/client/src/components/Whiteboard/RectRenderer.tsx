@@ -1,5 +1,6 @@
 import { Rect } from 'react-konva'
 import { TWhiteboardElement } from '../../types/types'
+import { KonvaEventObject } from 'konva/lib/Node'
 
 function RectRenderer({
   element,
@@ -7,8 +8,8 @@ function RectRenderer({
   handleDragEnd,
 }: {
   element: TWhiteboardElement
-  handleDragStart: Function
-  handleDragEnd: Function
+  handleDragStart: (e: KonvaEventObject<MouseEvent>) => void
+  handleDragEnd: (e: KonvaEventObject<MouseEvent>) => void
 }) {
   if (element.className !== 'Rect') return null
   return (
