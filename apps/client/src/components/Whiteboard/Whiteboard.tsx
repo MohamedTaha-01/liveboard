@@ -5,7 +5,7 @@ import {
   TPosition,
   TSocketResponse,
 } from '../../types/types'
-import { useContext, useRef } from 'react'
+import { Fragment, useContext, useRef } from 'react'
 import { Stage as TStage } from 'konva/lib/Stage'
 import { SocketContext } from '../../context/SocketProvider'
 import { ToolSettingsContext } from '../../context/ToolSettingsProvider'
@@ -153,7 +153,7 @@ function Whiteboard({
           {whiteboard &&
             whiteboard.content &&
             whiteboard.content.map((element: TWhiteboardElement, i) => (
-              <>
+              <Fragment key={i}>
                 <LineRenderer key={`line-${i}`} element={element} />
                 <RectRenderer
                   key={`rect-${i}`}
@@ -161,7 +161,7 @@ function Whiteboard({
                   handleDragStart={handleDragStart}
                   handleDragEnd={handleDragEnd}
                 />
-              </>
+              </Fragment>
             ))}
         </Layer>
       </Stage>
