@@ -1,4 +1,4 @@
-import { Stage, Layer, Line, Rect } from 'react-konva'
+import { Stage, Layer } from 'react-konva'
 import { KonvaEventObject } from 'konva/lib/Node'
 import {
   TWhiteboardElement,
