@@ -1,6 +1,7 @@
 import { useContext } from 'react'
 import { SocketContext } from '../context/SocketProvider'
 import { TSocketResponse } from '../types/types'
+import { TIMEOUT_DELAY } from '../libs/constants'
 
 export const useSocketEvents = () => {
   const { socket } = useContext(SocketContext)
@@ -17,12 +18,24 @@ export const useSocketEvents = () => {
 
   const emitCreateWhiteboard = async (): Promise<TSocketResponse> => {
     await _checkSocketConnection()
-    return await socket!.emitWithAck('whiteboard:create')
+    try {
+      return await socket!
+        .timeout(TIMEOUT_DELAY)
+        .emitWithAck('whiteboard:create')
+    } catch (error) {
+      return Promise.reject('Timeout error')
+    }
   }
 
   const emitJoinWhiteboard = async (id: string): Promise<TSocketResponse> => {
     await _checkSocketConnection()
-    return await socket!.emitWithAck('whiteboard:join', id)
+    try {
+      return await socket!
+        .timeout(TIMEOUT_DELAY)
+        .emitWithAck('whiteboard:join', id)
+    } catch (error) {
+      return Promise.reject('Timeout error')
+    }
   }
 
   const emitChangeVisibility = async (
@@ -30,11 +43,13 @@ export const useSocketEvents = () => {
     visibility: string
   ): Promise<TSocketResponse> => {
     await _checkSocketConnection()
-    return await socket!.emitWithAck(
-      'whiteboard:change-visibility',
-      id,
-      visibility
-    )
+    try {
+      return await socket!
+        .timeout(TIMEOUT_DELAY)
+        .emitWithAck('whiteboard:change-visibility', id, visibility)
+    } catch (error) {
+      return Promise.reject('Timeout error')
+    }
   }
 
   return { emitCreateWhiteboard, emitJoinWhiteboard, emitChangeVisibility }

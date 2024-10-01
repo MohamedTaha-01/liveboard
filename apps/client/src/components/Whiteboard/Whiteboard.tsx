@@ -10,6 +10,7 @@ import { Stage as TStage } from 'konva/lib/Stage'
 import { SocketContext } from '../../context/SocketProvider'
 import { ToolSettingsContext } from '../../context/ToolSettingsProvider'
 import { IWhiteboard } from '../../types/whiteboard'
+import { TIMEOUT_DELAY } from '../../libs/constants'
 
 function Whiteboard({
   whiteboard,
@@ -70,17 +71,18 @@ function Whiteboard({
     })
   }
 
-  const handleMouseUp = () => {
+  const handleMouseUp = async () => {
     isDrawing.current = false
     const lastLine = whiteboard.content[whiteboard.content.length - 1]
-    socket.emit(
-      'whiteboard:draw',
-      whiteboard.id,
-      lastLine,
-      (res: TSocketResponse) => {
-        console.log('emmited draw order, received status:', res.status)
-      }
-    )
+    try {
+      const res: TSocketResponse = await socket
+        .timeout(TIMEOUT_DELAY)
+        .emitWithAck('whiteboard:draw', whiteboard.id, lastLine)
+      console.log('emmited draw order, received status:', res.status)
+    } catch (err) {
+      const error: Error = err as Error
+      console.log(error.message)
+    }
   }
 
   const handleDragStart = (e: KonvaEventObject<MouseEvent>) => {
@@ -105,12 +107,16 @@ function Whiteboard({
       }
     })
     const movedElement = whiteboard.content.find((el) => el.id === id)
-    const res: TSocketResponse = await socket.emitWithAck(
-      'whiteboard:move',
-      whiteboard.id,
-      movedElement
-    )
-    console.log('emmited move order, received status:', res.status)
+
+    try {
+      const res: TSocketResponse = await socket
+        .timeout(TIMEOUT_DELAY)
+        .emitWithAck('whiteboard:move', whiteboard.id, movedElement)
+      console.log('emmited move order, received status:', res.status)
+    } catch (err) {
+      const error: Error = err as Error
+      console.log(error.message)
+    }
   }
 
   socket.on('whiteboard:render', (newLine: TWhiteboardElement) => {
