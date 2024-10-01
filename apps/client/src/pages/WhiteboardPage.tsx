@@ -58,6 +58,16 @@ function WhiteboardPage() {
     });
   };
 
+  socket.on("whiteboard:change-visibility", (newVisibility) => {
+    setWhiteboard((prev) => {
+      return { ...prev, visibility: newVisibility };
+    });
+
+    if (socket.id === whiteboard.owner) return;
+    console.log("You have been kicked from this whiteboard");
+    navigate("/");
+  });
+
   useEffect(() => {
     if (!socket) {
       console.log("socket not connected");
