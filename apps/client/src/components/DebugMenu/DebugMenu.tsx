@@ -1,29 +1,34 @@
-import { useContext } from "react";
-import { SocketContext } from "../../context/SocketProvider";
+import { useContext } from 'react'
+import { SocketContext } from '../../context/SocketProvider'
+import { EConnectionState } from '../../enums/enums'
 
 function DebugMenu() {
-  const { socket } = useContext(SocketContext)!;
+  const { socket, connectionState } = useContext(SocketContext)!
 
   return (
     <div
       style={{
-        position: "absolute",
+        position: 'absolute',
         bottom: 20,
         right: 20,
         fontSize: 14,
-        background: "#e3e3e3",
+        background: '#e3e3e3',
         padding: 16,
-        border: "1px solid #ccc",
+        border: '1px solid #ccc',
         borderRadius: 8,
         opacity: 0.8,
-      }}>
-      <h1 style={{ textAlign: "center", marginBottom: 8, fontSize: 20 }}>DEV MENU</h1>
+      }}
+    >
+      <h1 style={{ textAlign: 'center', marginBottom: 8, fontSize: 20 }}>
+        DEV MENU
+      </h1>
       <h2 style={{ fontSize: 18 }}>Socket</h2>
-      <ul style={{ listStyle: "none" }}>
+      <ul style={{ listStyle: 'none' }}>
         <li>ID: {socket && socket.id}</li>
+        <li>State: {EConnectionState[connectionState]}</li>
       </ul>
     </div>
-  );
+  )
 }
 
-export default DebugMenu;
+export default DebugMenu
