@@ -158,6 +158,7 @@ function Whiteboard({
         onMousemove={handleMouseMove}
         onMouseup={handleMouseUp}
         ref={stageRef}
+        className="bg-background"
       >
         <Layer>
           {whiteboard &&
