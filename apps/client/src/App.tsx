@@ -5,7 +5,7 @@ function App() {
   return (
     <main>
       <Router />
-      {import.meta.env.VITE_PROD && <DebugMenu />}
+      {/* {import.meta.env.VITE_PROD && <DebugMenu />} */}
     </main>
   )
 }
