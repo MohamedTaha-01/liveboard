@@ -141,7 +141,7 @@ function Whiteboard({
 
   return (
     <>
-      {import.meta.env.VITE_PROD && (
+      {/* {import.meta.env.VITE_PROD && (
         //! DEBUG // //
         <div style={{ position: 'absolute', top: 0, right: 0, zIndex: 100 }}>
           <button onClick={() => console.log(stageRef.current?.toJSON())}>
@@ -149,7 +149,7 @@ function Whiteboard({
           </button>
         </div>
         //! // // // //
-      )}
+      )} */}
 
       <Stage
         width={window.innerWidth}
@@ -158,7 +158,7 @@ function Whiteboard({
         onMousemove={handleMouseMove}
         onMouseup={handleMouseUp}
         ref={stageRef}
-        className="bg-background"
+        className="bg-background overflow-hidden"
       >
         <Layer>
           {whiteboard &&

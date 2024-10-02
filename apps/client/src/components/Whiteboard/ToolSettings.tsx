@@ -58,7 +58,7 @@ function ToolSettings({
     // </section>
     <section
       id="tool-settings"
-      className="absolute top-1/2 left-8 translate-y-[-50%] flex flex-row gap-4 z-50"
+      className="absolute top-1/2 left-4 translate-y-[-50%] flex flex-row gap-2 z-50"
     >
       <Card className="relative h-full">
         <CardHeader>

@@ -84,7 +84,7 @@ function WhiteboardPage() {
 
   return (
     (socket && (
-      <>
+      <div className="overflow-hidden">
         <Whiteboard whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
         <OptionsBar whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
         <ToolSettings whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
@@ -101,7 +101,7 @@ function WhiteboardPage() {
           <p>Vis: {whiteboard.visibility}</p>
         </section>
         <MouseCircle color={toolSettings?.color} size={toolSettings?.size} />
-      </>
+      </div>
     )) || <p>Connecting...</p>
   )
 }

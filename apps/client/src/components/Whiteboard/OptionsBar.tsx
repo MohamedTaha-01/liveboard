@@ -46,7 +46,9 @@ function OptionsBar({
       <MenubarMenu>
         <MenubarTrigger>File</MenubarTrigger>
         <MenubarContent>
+          <MenubarItem>Import</MenubarItem>
           <MenubarItem>Export</MenubarItem>
+          <MenubarSeparator />
           <MenubarItem>Download</MenubarItem>
         </MenubarContent>
       </MenubarMenu>
