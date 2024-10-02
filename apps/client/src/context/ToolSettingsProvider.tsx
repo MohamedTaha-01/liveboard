@@ -12,7 +12,7 @@ export const ToolSettingsProvider = ({
 }) => {
   const [tool, setTool] = useState<TWhiteboardTool>('pen')
   const [size, setSize] = useState<number>(5)
-  const [color, setColor] = useState<string>('#df4b26')
+  const [color, setColor] = useState<string>('hsl(346.8, 42.2%, 49.8%)')
 
   const changeTool = (t: TWhiteboardTool) => {
     if (t !== 'pen' && t !== 'eraser') return

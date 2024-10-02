@@ -3,6 +3,12 @@ import { ToolSettingsContext } from '../../context/ToolSettingsProvider'
 import { IWhiteboard } from '../../types/whiteboard'
 import { TSocketResponse, TWhiteboardElement } from '../../types/types'
 import { SocketContext } from '../../context/SocketProvider'
+import { Card, CardContent, CardHeader } from '../ui/card'
+import { Button } from '../ui/button'
+import { Eraser, Pen } from 'lucide-react'
+import { Slider } from '../ui/slider'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
+import { HexColorInput, HexColorPicker } from 'react-colorful'
 
 function ToolSettings({
   whiteboard,
@@ -46,37 +52,78 @@ function ToolSettings({
   }
 
   return (
-    <section style={{ position: 'absolute', top: 40, left: 0 }}>
-      <p>Tool</p>
-      <select
-        value={toolSettings.tool}
-        onChange={(e) => {
-          toolSettings.changeTool(e.target.value)
-        }}
-      >
-        <option value="pen">Pen</option>
-        <option value="eraser">Eraser</option>
-      </select>
-      <select
-        value={toolSettings.size}
-        onChange={(e) => {
-          toolSettings.changeSize(e.target.value)
-        }}
-      >
-        <option value={2}>2</option>
-        <option value={5}>5</option>
-        <option value={8}>8</option>
-        <option value={12}>12</option>
-        <option value={16}>16</option>
-        <option value={50}>50</option>
-        <option value={100}>100</option>
-      </select>
-      <button onClick={createRect}>Rect</button>
-      <input
-        type="color"
-        value={toolSettings.color}
-        onChange={(e) => toolSettings.changeColor(e.target.value)}
-      ></input>
+    // <section style={{ position: 'absolute', top: 40, left: 0 }}>
+    //   <button onClick={createRect}>Rect</button>
+    //   <ColorPicker />
+    // </section>
+    <section
+      id="tool-settings"
+      className="absolute top-1/2 left-8 translate-y-[-50%] flex flex-row gap-4"
+    >
+      <Card className="relative h-full">
+        <CardHeader>
+          <h2 className="text-base font-semibold">Tool</h2>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <Button
+            variant={`${toolSettings.tool === 'pen' ? 'default' : 'ghost'}`}
+            size="icon"
+            onClick={() => toolSettings?.changeTool('pen')}
+          >
+            <Pen className="h-4 w-4" />
+          </Button>
+          <Button
+            variant={`${toolSettings.tool === 'eraser' ? 'default' : 'ghost'}`}
+            size="icon"
+            onClick={() => toolSettings?.changeTool('eraser')}
+          >
+            <Eraser className="h-4 w-4" />
+          </Button>
+        </CardContent>
+      </Card>
+      <Card id="tool-settings-properties" className="relative h-full hidden">
+        <CardHeader>
+          <h2 className="text-base font-semibold">Properties</h2>
+        </CardHeader>
+        <CardContent className="grid gap-6">
+          <article>
+            <div className="flex flex-row justify-between items-baseline mb-3">
+              <p className="text-sm text-muted-foreground">Size</p>
+              <p className="text-slate-300 text-xs">{toolSettings.size}</p>
+            </div>
+            <Slider
+              defaultValue={[5]}
+              max={100}
+              min={2}
+              step={2}
+              onValueChange={(e) => toolSettings.changeSize(e[0])}
+              className="cursor-pointer w-44"
+            />
+          </article>
+          <article>
+            <div className="flex flex-row justify-between items-baseline mb-3">
+              <p className="text-sm text-muted-foreground">Color</p>
+              <HexColorInput
+                color={toolSettings.color}
+                onChange={(e) => toolSettings.changeColor(e)}
+                className="text-end text-slate-300 text-xs"
+              />
+            </div>
+            <Popover>
+              <PopoverTrigger
+                className="w-full h-8 rounded-md shadow-md cursor-pointer"
+                style={{ backgroundColor: toolSettings.color }}
+              ></PopoverTrigger>
+              <PopoverContent>
+                <HexColorPicker
+                  color={toolSettings.color}
+                  onChange={(e) => toolSettings.changeColor(e)}
+                />
+              </PopoverContent>
+            </Popover>
+          </article>
+        </CardContent>
+      </Card>
     </section>
   )
 }

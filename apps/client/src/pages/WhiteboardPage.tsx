@@ -7,11 +7,15 @@ import ToolSettings from '../components/Whiteboard/ToolSettings'
 import { IWhiteboard } from '../types/whiteboard'
 import { useWhiteboard } from '../hooks/useWhiteboard'
 import { EConnectionState } from '../enums/enums'
+import OptionsBar from '@/components/Whiteboard/OptionsBar'
 import MouseCircle from '@/components/Whiteboard/MouseCircle'
+import { ToolSettingsContext } from '@/context/ToolSettingsProvider'
 
 function WhiteboardPage() {
   const { socket, connectionState } = useContext(SocketContext)!
+  const { joinWhiteboard } = useWhiteboard()
   const toolSettings = useContext(ToolSettingsContext)
+
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -48,30 +52,6 @@ function WhiteboardPage() {
     }
   }
 
-  const handleChangeVisibility = async (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const newVisibility = e.target.value
-    const oldVisibility = whiteboard.visibility
-    if (newVisibility !== 'private' && newVisibility !== 'public') return
-    if (newVisibility === oldVisibility) return
-
-    setWhiteboard((prev) => {
-      return { ...prev, visibility: newVisibility }
-    })
-
-    const res = await changeWhiteboardVisibility(whiteboard.id, newVisibility)
-
-    if (res.status !== 200) {
-      return setWhiteboard((prev) => {
-        return { ...prev, visibility: oldVisibility }
-      })
-    }
-    setWhiteboard((prev) => {
-      return { ...prev, visibility: newVisibility }
-    })
-  }
-
   useEffect(() => {
     if (!socket || connectionState === EConnectionState.Disconnected) {
       setWhiteboard({
@@ -106,16 +86,7 @@ function WhiteboardPage() {
     (socket && (
       <>
         <Whiteboard whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
-        <section style={{ position: 'absolute', top: 0, left: 0 }}>
-          <p>Visibility</p>
-          <select
-            value={whiteboard.visibility}
-            onChange={handleChangeVisibility}
-          >
-            <option value="private">Private</option>
-            <option value="public">Public</option>
-          </select>
-        </section>
+        <OptionsBar whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
         <ToolSettings whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
         <section
           style={{
