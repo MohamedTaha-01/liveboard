@@ -164,15 +164,15 @@ function Whiteboard({
           {whiteboard &&
             whiteboard.content &&
             whiteboard.content.map((element: TWhiteboardElement, i) => (
-              <Fragment key={i}>
-                <LineRenderer key={`line-${i}`} element={element} />
-                <RectRenderer
+              // <Fragment key={i}>
+              <LineRenderer key={`line-${i}`} element={element} />
+              /* <RectRenderer
                   key={`rect-${i}`}
                   element={element}
                   handleDragStart={handleDragStart}
                   handleDragEnd={handleDragEnd}
-                />
-              </Fragment>
+                /> */
+              /* </Fragment> */
             ))}
         </Layer>
       </Stage>
