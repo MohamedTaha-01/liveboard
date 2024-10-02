@@ -41,8 +41,8 @@ function WhiteboardPage() {
           break
       }
     } catch (err: unknown) {
-      const error = err as Error
-      console.log(error.message)
+      console.log(err)
+      navigate(`/`)
     }
   }
 
@@ -70,22 +70,31 @@ function WhiteboardPage() {
     })
   }
 
-  socket.on('whiteboard:change-visibility', (newVisibility) => {
-    setWhiteboard((prev) => {
-      return { ...prev, visibility: newVisibility }
-    })
-
-    if (socket.id === whiteboard.owner) return
-    console.log('You have been kicked from this whiteboard')
-    navigate('/')
-  })
-
   useEffect(() => {
     if (!socket) {
-      console.log('socket not connected')
-      return navigate('/')
+      setWhiteboard({
+        id: undefined,
+        owner: undefined,
+        content: [],
+        visibility: 'private',
+      })
+      return
     }
     handleJoinWhiteboard()
+
+    socket.on('whiteboard:change-visibility', (newVisibility) => {
+      setWhiteboard((prev) => {
+        return { ...prev, visibility: newVisibility }
+      })
+
+      if (socket.id === whiteboard.owner) return
+      console.log('You have been kicked from this whiteboard')
+      navigate('/')
+    })
+
+    return () => {
+      socket.off('whiteboard:change-visibility')
+    }
   }, [socket])
 
   return (

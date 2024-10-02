@@ -41,6 +41,11 @@ function SocketProvider({ children }: { children: ReactNode }) {
         setConnectionState(EConnectionState.Disconnected)
       }
     })
+    s.on('disconnect', () => {
+      console.log('disconnected')
+      setSocket(undefined)
+      setConnectionState(EConnectionState.Disconnected)
+    })
 
     return () => {
       s.off('connect', () => {

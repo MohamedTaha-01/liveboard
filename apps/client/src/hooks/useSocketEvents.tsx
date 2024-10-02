@@ -9,7 +9,7 @@ export const useSocketEvents = () => {
   const _checkSocketConnection = (): Promise<void> => {
     return new Promise((resolve, reject) => {
       if (!socket) {
-        reject('Socket not connected')
+        reject('Unable to establish connection with the server.')
       } else {
         resolve()
       }
