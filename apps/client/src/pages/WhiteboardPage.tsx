@@ -102,7 +102,7 @@ function WhiteboardPage() {
         </section>
         <MouseCircle color={toolSettings?.color} size={toolSettings?.size} />
       </>
-    )) || <p>Not connected</p>
+    )) || <p>Connecting...</p>
   )
 }
 

@@ -42,7 +42,7 @@ function OptionsBar({
   }
 
   return (
-    <Menubar className="absolute top-4 left-4">
+    <Menubar className="absolute top-4 left-4 z-50">
       <MenubarMenu>
         <MenubarTrigger>File</MenubarTrigger>
         <MenubarContent>
