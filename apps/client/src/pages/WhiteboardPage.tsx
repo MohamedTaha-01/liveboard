@@ -11,6 +11,8 @@ import OptionsBar from '@/components/Whiteboard/OptionsBar'
 import MouseCircle from '@/components/Whiteboard/MouseCircle'
 import { ToolSettingsContext } from '@/context/ToolSettingsProvider'
 import WhiteboardDebugInfo from '@/components/Whiteboard/WhiteboardDebugInfo'
+import { Button } from '@/components/ui/button'
+import { ChevronRightIcon } from 'lucide-react'
 
 function WhiteboardPage() {
   const { socket, connectionState } = useContext(SocketContext)!
@@ -26,6 +28,7 @@ function WhiteboardPage() {
     content: [],
     visibility: 'private',
   })
+  const [showToolSettings, setShowToolSettings] = useState(false)
 
   const handleJoinWhiteboard = async () => {
     try {
@@ -88,7 +91,18 @@ function WhiteboardPage() {
       <div className="overflow-hidden">
         <Whiteboard whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
         <OptionsBar whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
-        <ToolSettings whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
+
+        <Button
+          onClick={() => setShowToolSettings((prev) => !prev)}
+          variant="ghost"
+          size="icon"
+          className="absolute left-0 top-1/2 translate-y-[-50%]"
+        >
+          <ChevronRightIcon />
+        </Button>
+        {showToolSettings && (
+          <ToolSettings whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
+        )}
         {/* <WhiteboardDebugInfo whiteboard={whiteboard} /> */}
         <MouseCircle color={toolSettings?.color} size={toolSettings?.size} />
       </div>

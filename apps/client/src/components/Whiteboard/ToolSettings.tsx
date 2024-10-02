@@ -58,7 +58,7 @@ function ToolSettings({
     // </section>
     <section
       id="tool-settings"
-      className="absolute top-1/2 left-4 translate-y-[-50%] flex flex-row gap-2 z-50"
+      className="absolute top-1/2 left-10 translate-y-[-50%] flex flex-row gap-2 z-50 transition-all"
     >
       <Card className="relative h-full">
         <CardHeader>
@@ -81,7 +81,7 @@ function ToolSettings({
           </Button>
         </CardContent>
       </Card>
-      <Card id="tool-settings-properties" className="relative h-full hidden">
+      <Card id="tool-settings-properties" className="relative h-full">
         <CardHeader>
           <h2 className="text-base font-semibold">Properties</h2>
         </CardHeader>

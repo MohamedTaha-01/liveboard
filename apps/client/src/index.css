@@ -67,7 +67,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-#tool-settings:hover #tool-settings-properties {
-  display: block;
-}
