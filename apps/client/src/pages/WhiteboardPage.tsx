@@ -7,10 +7,11 @@ import ToolSettings from '../components/Whiteboard/ToolSettings'
 import { IWhiteboard } from '../types/whiteboard'
 import { useWhiteboard } from '../hooks/useWhiteboard'
 import { EConnectionState } from '../enums/enums'
+import MouseCircle from '@/components/Whiteboard/MouseCircle'
 
 function WhiteboardPage() {
   const { socket, connectionState } = useContext(SocketContext)!
-  const { joinWhiteboard, changeWhiteboardVisibility } = useWhiteboard()
+  const toolSettings = useContext(ToolSettingsContext)
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -128,6 +129,7 @@ function WhiteboardPage() {
           <p>Owner: {whiteboard.owner}</p>
           <p>Vis: {whiteboard.visibility}</p>
         </section>
+        <MouseCircle color={toolSettings?.color} size={toolSettings?.size} />
       </>
     )) || <p>Not connected</p>
   )
