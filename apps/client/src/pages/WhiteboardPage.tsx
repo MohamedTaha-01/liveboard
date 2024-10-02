@@ -6,9 +6,10 @@ import { TSocketResponse } from '../types/types'
 import ToolSettings from '../components/Whiteboard/ToolSettings'
 import { IWhiteboard } from '../types/whiteboard'
 import { useWhiteboard } from '../hooks/useWhiteboard'
+import { EConnectionState } from '../enums/enums'
 
 function WhiteboardPage() {
-  const { socket } = useContext(SocketContext)!
+  const { socket, connectionState } = useContext(SocketContext)!
   const { joinWhiteboard, changeWhiteboardVisibility } = useWhiteboard()
   const location = useLocation()
   const navigate = useNavigate()
@@ -71,7 +72,7 @@ function WhiteboardPage() {
   }
 
   useEffect(() => {
-    if (!socket) {
+    if (!socket || connectionState === EConnectionState.Disconnected) {
       setWhiteboard({
         id: undefined,
         owner: undefined,
@@ -80,22 +81,25 @@ function WhiteboardPage() {
       })
       return
     }
-    handleJoinWhiteboard()
 
-    socket.on('whiteboard:change-visibility', (newVisibility) => {
-      setWhiteboard((prev) => {
-        return { ...prev, visibility: newVisibility }
+    if (connectionState === EConnectionState.Connected) {
+      handleJoinWhiteboard()
+
+      socket.on('whiteboard:change-visibility', (newVisibility) => {
+        setWhiteboard((prev) => {
+          return { ...prev, visibility: newVisibility }
+        })
+
+        if (socket.id === whiteboard.owner) return
+        console.log('You have been kicked from this whiteboard')
+        navigate('/')
       })
 
-      if (socket.id === whiteboard.owner) return
-      console.log('You have been kicked from this whiteboard')
-      navigate('/')
-    })
-
-    return () => {
-      socket.off('whiteboard:change-visibility')
+      return () => {
+        socket.off('whiteboard:change-visibility')
+      }
     }
-  }, [socket])
+  }, [connectionState])
 
   return (
     (socket && (
