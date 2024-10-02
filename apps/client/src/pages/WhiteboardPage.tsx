@@ -10,6 +10,7 @@ import { EConnectionState } from '../enums/enums'
 import OptionsBar from '@/components/Whiteboard/OptionsBar'
 import MouseCircle from '@/components/Whiteboard/MouseCircle'
 import { ToolSettingsContext } from '@/context/ToolSettingsProvider'
+import WhiteboardDebugInfo from '@/components/Whiteboard/WhiteboardDebugInfo'
 
 function WhiteboardPage() {
   const { socket, connectionState } = useContext(SocketContext)!
@@ -88,18 +89,7 @@ function WhiteboardPage() {
         <Whiteboard whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
         <OptionsBar whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
         <ToolSettings whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
-        <section
-          style={{
-            position: 'absolute',
-            right: 0,
-            top: 40,
-            textAlign: 'right',
-          }}
-        >
-          <p>ID: {whiteboard.id}</p>
-          <p>Owner: {whiteboard.owner}</p>
-          <p>Vis: {whiteboard.visibility}</p>
-        </section>
+        {/* <WhiteboardDebugInfo whiteboard={whiteboard} /> */}
         <MouseCircle color={toolSettings?.color} size={toolSettings?.size} />
       </div>
     )) || <p>Connecting...</p>
