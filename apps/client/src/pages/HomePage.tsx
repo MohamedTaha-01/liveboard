@@ -93,6 +93,7 @@ function HomePage() {
               ref={wbCodeInputRef}
               type="text"
               placeholder="Whiteboard code"
+              onKeyDown={(e) => e.key === 'Enter' && handleWhiteboardJoin()}
             />
             <Button onClick={handleWhiteboardJoin}>Join whiteboard</Button>
           </div>
