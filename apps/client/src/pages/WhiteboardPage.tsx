@@ -12,7 +12,7 @@ import MouseCircle from '@/components/Whiteboard/MouseCircle'
 import { ToolSettingsContext } from '@/context/ToolSettingsProvider'
 import WhiteboardDebugInfo from '@/components/Whiteboard/WhiteboardDebugInfo'
 import { Button } from '@/components/ui/button'
-import { ChevronRightIcon } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, X } from 'lucide-react'
 
 function WhiteboardPage() {
   const { socket, connectionState } = useContext(SocketContext)!
@@ -96,9 +96,9 @@ function WhiteboardPage() {
           onClick={() => setShowToolSettings((prev) => !prev)}
           variant="ghost"
           size="icon"
-          className="absolute left-0 top-1/2 translate-y-[-50%]"
+          className="absolute left-0 top-1/2 translate-y-[-50%] z-50"
         >
-          <ChevronRightIcon />
+          {showToolSettings ? <X /> : <ChevronRightIcon />}
         </Button>
         {showToolSettings && (
           <ToolSettings whiteboard={whiteboard} setWhiteboard={setWhiteboard} />

@@ -10,6 +10,8 @@ import {
 } from '../ui/menubar'
 import { Switch } from '../ui/switch'
 import { IWhiteboard } from '@/types/whiteboard'
+import { useContext } from 'react'
+import { SocketContext } from '@/context/SocketProvider'
 
 function OptionsBar({
   whiteboard,
@@ -18,6 +20,8 @@ function OptionsBar({
   whiteboard: IWhiteboard
   setWhiteboard: React.Dispatch<React.SetStateAction<IWhiteboard>>
 }) {
+  const { socket } = useContext(SocketContext)
+
   const { changeWhiteboardVisibility } = useWhiteboard()
 
   const handleChangeVisibility = async () => {
@@ -55,20 +59,23 @@ function OptionsBar({
       <MenubarMenu>
         <MenubarTrigger>Board</MenubarTrigger>
         <MenubarContent>
-          <MenubarItem
-            onClick={(e) => {
-              e.preventDefault()
-              handleChangeVisibility()
-            }}
-          >
-            Public
-            <MenubarShortcut>⌘V</MenubarShortcut>&nbsp;
-            <Switch
-              checked={whiteboard.visibility === 'public' ? true : false}
-            />
-          </MenubarItem>
-          <MenubarSeparator />
-
+          {socket && socket.id === whiteboard.owner && (
+            <>
+              <MenubarItem
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleChangeVisibility()
+                }}
+              >
+                Public
+                <MenubarShortcut>⌘V</MenubarShortcut>&nbsp;
+                <Switch
+                  checked={whiteboard.visibility === 'public' ? true : false}
+                />
+              </MenubarItem>
+              <MenubarSeparator />
+            </>
+          )}
           <MenubarItem>
             Clear board <MenubarShortcut>⌘C</MenubarShortcut>
           </MenubarItem>
