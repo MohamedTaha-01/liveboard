@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useContext, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TSocketResponse } from '../types/types'
 import { useWhiteboard } from '../hooks/useWhiteboard'
@@ -6,11 +6,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
 import { TOAST_DURATION } from '@/libs/constants'
+import { SocketContext } from '@/context/SocketProvider'
 
 function HomePage() {
   const { createWhiteboard } = useWhiteboard()
   const navigate = useNavigate()
   const { toast } = useToast()
+
+  const { socket } = useContext(SocketContext)
 
   const wbCodeInputRef = useRef<HTMLInputElement>(null)
 
@@ -37,7 +40,26 @@ function HomePage() {
   }
 
   const handleWhiteboardJoin = async () => {
-    // TODO Validate input and if whiteboard exists
+    if (!wbCodeInputRef.current?.value) {
+      return toast({
+        title: 'Error',
+        description: 'Invalid code',
+        duration: TOAST_DURATION,
+        variant: 'destructive',
+      })
+    }
+    const res = await socket?.emitWithAck(
+      'whiteboard:check',
+      wbCodeInputRef.current?.value
+    )
+    if (res.status !== 200) {
+      return toast({
+        title: 'Error',
+        description: res.error || 'An error has occurred',
+        duration: TOAST_DURATION,
+        variant: 'destructive',
+      })
+    }
     navigate(`/whiteboards/${wbCodeInputRef.current?.value}`)
   }
 

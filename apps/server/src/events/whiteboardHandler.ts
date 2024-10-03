@@ -42,6 +42,26 @@ export const whiteboardHandler = (io: Server, socket: Socket) => {
     }
   })
 
+  socket.on('whiteboard:check', (id: string, callback: Function) => {
+    if (!id) return callback({ status: 400, error: 'Missing whiteboard ID' })
+    try {
+      const whiteboard = storage.find((wb) => wb.id === id)
+      if (!whiteboard)
+        return callback({ status: 404, error: 'Whiteboard not found' })
+
+      if (whiteboard.visibility === 'private' && whiteboard.owner !== socket.id)
+        return callback({
+          status: 403,
+          error: "You don't have permission to join this whiteboard.",
+        })
+      callback({
+        status: 200,
+      })
+    } catch (error) {
+      callback({ status: 500, error: 'Internal server error' })
+    }
+  })
+
   socket.on('whiteboard:draw', (id: string, element, callback: Function) => {
     if (!id) return callback({ status: 400, error: 'Missing whiteboard ID' })
     if (!element) return callback({ status: 400, error: 'Bad request' })
