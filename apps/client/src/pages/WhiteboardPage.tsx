@@ -137,7 +137,11 @@ function WhiteboardPage() {
         {/* <WhiteboardDebugInfo whiteboard={whiteboard} /> */}
         <MouseCircle color={toolSettings?.color} size={toolSettings?.size} />
       </div>
-    )) || <p>Connecting...</p>
+    )) || (
+      <div className="flex justify-center items-center h-screen w-screen">
+        <p>Connecting...</p>
+      </div>
+    )
   )
 }
 
