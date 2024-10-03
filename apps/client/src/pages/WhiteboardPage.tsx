@@ -83,6 +83,39 @@ function WhiteboardPage() {
     }
   }
 
+  const handleClearWhiteboard = async () => {
+    try {
+      const res = await socket?.emitWithAck('whiteboard:clear', whiteboard.id)
+      if (res.status === 404) {
+        return toast({
+          title: 'Error',
+          description: res.error,
+          duration: TOAST_DURATION,
+          variant: 'destructive',
+        })
+      }
+      if (res.status !== 200) {
+        return toast({
+          title: 'Error',
+          description: res.error,
+          duration: TOAST_DURATION,
+          variant: 'destructive',
+        })
+      }
+      setWhiteboard((prev) => {
+        return { ...prev, content: [] }
+      })
+    } catch (err: unknown) {
+      const error = err as Error
+      toast({
+        title: 'Error',
+        description: error.message || error,
+        duration: TOAST_DURATION,
+        variant: 'destructive',
+      })
+    }
+  }
+
   useEffect(() => {
     if (!socket || connectionState === EConnectionState.Disconnected) {
       setWhiteboard({
@@ -141,7 +174,11 @@ function WhiteboardPage() {
     (socket && (
       <div className="overflow-hidden">
         <Whiteboard whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
-        <OptionsBar whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
+        <OptionsBar
+          whiteboard={whiteboard}
+          setWhiteboard={setWhiteboard}
+          handleClearWhiteboard={handleClearWhiteboard}
+        />
 
         <Button
           onClick={() => setShowToolSettings((prev) => !prev)}
@@ -152,7 +189,11 @@ function WhiteboardPage() {
           {showToolSettings ? <X /> : <ChevronRightIcon />}
         </Button>
         {showToolSettings && (
-          <ToolSettings whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
+          <ToolSettings
+            whiteboard={whiteboard}
+            setWhiteboard={setWhiteboard}
+            handleClearWhiteboard={handleClearWhiteboard}
+          />
         )}
         {/* <WhiteboardDebugInfo whiteboard={whiteboard} /> */}
         <MouseCircle color={toolSettings?.color} size={toolSettings?.size} />

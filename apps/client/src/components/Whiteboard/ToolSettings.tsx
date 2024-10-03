@@ -5,7 +5,7 @@ import { TSocketResponse, TWhiteboardElement } from '../../types/types'
 import { SocketContext } from '../../context/SocketProvider'
 import { Card, CardContent, CardHeader } from '../ui/card'
 import { Button } from '../ui/button'
-import { Eraser, Pen } from 'lucide-react'
+import { Eraser, Pen, Square, Trash } from 'lucide-react'
 import { Slider } from '../ui/slider'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { HexColorInput, HexColorPicker } from 'react-colorful'
@@ -13,9 +13,11 @@ import { HexColorInput, HexColorPicker } from 'react-colorful'
 function ToolSettings({
   whiteboard,
   setWhiteboard,
+  handleClearWhiteboard,
 }: {
   whiteboard: IWhiteboard
   setWhiteboard: React.Dispatch<React.SetStateAction<IWhiteboard>>
+  handleClearWhiteboard: () => void
 }) {
   const toolSettings = useContext(ToolSettingsContext)
 
@@ -78,6 +80,12 @@ function ToolSettings({
             onClick={() => toolSettings?.changeTool('eraser')}
           >
             <Eraser className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon">
+            <Square className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" onClick={handleClearWhiteboard}>
+            <Trash className="h-4 w-4" />
           </Button>
         </CardContent>
       </Card>
