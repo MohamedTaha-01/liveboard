@@ -72,7 +72,7 @@ function HomePage() {
       <section className="relative snap-always snap-center bg-secondary-foreground">
         <div className="h-screen w-screen max-h-screen max-w-screen flex flex-col justify-center items-center overflow-hidden transition-all gap-4">
           <h1 className="text-6xl text-secondary uppercase tracking-wide font-semibold">
-            LiveBoard
+            <span className="text-primary">Live</span>Board
           </h1>
           <p className="text-3xl text-secondary">Draw, plan, collaborate.</p>
         </div>
