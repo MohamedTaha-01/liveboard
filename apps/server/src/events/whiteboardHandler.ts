@@ -47,7 +47,6 @@ export const whiteboardHandler = (io: Server, socket: Socket) => {
     if (!element) return callback({ status: 400, error: 'Bad request' })
     try {
       WhiteboardLogger.logDraw(io.sockets.adapter.rooms, socket.id, id)
-      // TODO: add check for edge case where wb does not exist
       storage.find((wb) => wb.id === id)?.content.push(element)
       socket.to(id).emit('whiteboard:render', element)
       console.log(element)
