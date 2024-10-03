@@ -17,7 +17,8 @@ import { TOAST_DURATION } from '@/libs/constants'
 import { useToast } from '@/hooks/use-toast'
 
 function WhiteboardPage() {
-  const { socket, connectionState } = useContext(SocketContext)!
+  const { socket, setSocket, connectionState, setConnectionState } =
+    useContext(SocketContext)!
   const { joinWhiteboard } = useWhiteboard()
   const toolSettings = useContext(ToolSettingsContext)
 
@@ -33,6 +34,7 @@ function WhiteboardPage() {
     visibility: 'private',
   })
   const [showToolSettings, setShowToolSettings] = useState(false)
+  const [hasShownToast, setHasShownToast] = useState(false)
 
   const handleJoinWhiteboard = async () => {
     try {
@@ -89,17 +91,21 @@ function WhiteboardPage() {
         content: [],
         visibility: 'private',
       })
-      toast({
-        title: 'Connection lost',
-        description: 'Trying to reconnect...',
-        duration: TOAST_DURATION,
-        variant: 'destructive',
-      })
+      if (!hasShownToast) {
+        toast({
+          title: 'Connection lost',
+          description: 'Trying to reconnect...',
+          duration: TOAST_DURATION,
+          variant: 'destructive',
+        })
+        setHasShownToast(true)
+      }
       return
     }
 
     if (connectionState === EConnectionState.Connected) {
       handleJoinWhiteboard()
+      setHasShownToast(false)
 
       socket.on('whiteboard:change-visibility', (newVisibility) => {
         setWhiteboard((prev) => {
@@ -122,10 +128,9 @@ function WhiteboardPage() {
           duration: TOAST_DURATION,
           variant: 'destructive',
         })
-        if (location.pathname === '/') return
-        navigate('/')
+        setConnectionState(EConnectionState.Disconnected)
+        setSocket(undefined)
       })
-
       return () => {
         socket.off('whiteboard:change-visibility')
       }
@@ -154,7 +159,12 @@ function WhiteboardPage() {
       </div>
     )) || (
       <div className="flex justify-center items-center h-screen w-screen">
-        <p>Connecting...</p>
+        {connectionState === EConnectionState.Disconnected && (
+          <p>Disconnected</p>
+        )}
+        {connectionState === EConnectionState.Connecting && (
+          <p>Connecting...</p>
+        )}
       </div>
     )
   )
