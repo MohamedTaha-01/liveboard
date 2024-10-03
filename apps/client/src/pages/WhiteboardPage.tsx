@@ -12,7 +12,9 @@ import MouseCircle from '@/components/Whiteboard/MouseCircle'
 import { ToolSettingsContext } from '@/context/ToolSettingsProvider'
 import WhiteboardDebugInfo from '@/components/Whiteboard/WhiteboardDebugInfo'
 import { Button } from '@/components/ui/button'
-import { ChevronLeftIcon, ChevronRightIcon, X } from 'lucide-react'
+import { ChevronRightIcon, X } from 'lucide-react'
+import { TOAST_DURATION } from '@/libs/constants'
+import { useToast } from '@/hooks/use-toast'
 
 function WhiteboardPage() {
   const { socket, connectionState } = useContext(SocketContext)!
@@ -21,6 +23,8 @@ function WhiteboardPage() {
 
   const location = useLocation()
   const navigate = useNavigate()
+
+  const { toast } = useToast()
 
   const [whiteboard, setWhiteboard] = useState<IWhiteboard>({
     id: undefined,
@@ -39,19 +43,40 @@ function WhiteboardPage() {
           setWhiteboard(res.whiteboard)
           break
         case 404:
-          console.log('whiteboard not found')
+          toast({
+            title: 'Error',
+            description: res.error,
+            duration: TOAST_DURATION,
+            variant: 'destructive',
+          })
           navigate(`/`)
           break
         case 403:
-          console.log('not authorized')
+          toast({
+            title: 'Error',
+            description: res.error,
+            duration: TOAST_DURATION,
+            variant: 'destructive',
+          })
           navigate(`/`)
           break
         default:
+          toast({
+            title: 'Error',
+            description: 'Oops! There was an error!',
+            duration: TOAST_DURATION,
+            variant: 'destructive',
+          })
           navigate(`/`)
           break
       }
     } catch (err: unknown) {
-      console.log(err)
+      toast({
+        title: 'Error',
+        description: err as string,
+        duration: TOAST_DURATION,
+        variant: 'destructive',
+      })
       navigate(`/`)
     }
   }
@@ -63,6 +88,12 @@ function WhiteboardPage() {
         owner: undefined,
         content: [],
         visibility: 'private',
+      })
+      toast({
+        title: 'Connection lost',
+        description: 'Trying to reconnect...',
+        duration: TOAST_DURATION,
+        variant: 'destructive',
       })
       return
     }

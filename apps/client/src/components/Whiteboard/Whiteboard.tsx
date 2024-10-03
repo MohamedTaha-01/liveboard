@@ -10,9 +10,10 @@ import { Stage as TStage } from 'konva/lib/Stage'
 import { SocketContext } from '../../context/SocketProvider'
 import { ToolSettingsContext } from '../../context/ToolSettingsProvider'
 import { IWhiteboard } from '../../types/whiteboard'
-import { TIMEOUT_DELAY } from '../../libs/constants'
+import { TIMEOUT_DELAY, TOAST_DURATION } from '../../libs/constants'
 import LineRenderer from './LineRenderer'
 import RectRenderer from './RectRenderer'
+import { useToast } from '@/hooks/use-toast'
 
 function Whiteboard({
   whiteboard,
@@ -22,6 +23,8 @@ function Whiteboard({
   setWhiteboard: React.Dispatch<React.SetStateAction<IWhiteboard>>
 }) {
   const { socket } = useContext(SocketContext)!
+
+  const { toast } = useToast()
 
   const isDrawing = useRef(false)
   const stageRef = useRef<TStage>(null)
@@ -128,7 +131,12 @@ function Whiteboard({
       console.log('emmited move order, received status:', res.status)
     } catch (err) {
       const error: Error = err as Error
-      console.log(error.message)
+      toast({
+        title: 'Error',
+        description: error.message || err || 'Oops! There was an error!',
+        duration: TOAST_DURATION,
+        variant: 'destructive',
+      })
     }
   }
 

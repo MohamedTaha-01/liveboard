@@ -4,21 +4,35 @@ import { TSocketResponse } from '../types/types'
 import { useWhiteboard } from '../hooks/useWhiteboard'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useToast } from '@/hooks/use-toast'
+import { TOAST_DURATION } from '@/libs/constants'
 
 function HomePage() {
   const { createWhiteboard } = useWhiteboard()
   const navigate = useNavigate()
+  const { toast } = useToast()
 
   const wbCodeInputRef = useRef<HTMLInputElement>(null)
 
   const handleWhiteboardCreate = async () => {
     try {
       const res: TSocketResponse = await createWhiteboard()
-      if (res.status !== 201) return console.log(res.error)
+      if (res.status !== 201)
+        return toast({
+          title: 'Error',
+          description: res.error,
+          duration: TOAST_DURATION,
+          variant: 'destructive',
+        })
       navigate(`/whiteboards/${res.whiteboard.id}`)
     } catch (err: unknown) {
       const error = err as Error
-      console.log(error.message)
+      toast({
+        title: 'Error',
+        description: error.message || error,
+        duration: TOAST_DURATION,
+        variant: 'destructive',
+      })
     }
   }
 
