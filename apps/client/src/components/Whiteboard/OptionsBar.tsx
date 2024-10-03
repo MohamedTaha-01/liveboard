@@ -12,6 +12,8 @@ import { Switch } from '../ui/switch'
 import { IWhiteboard } from '@/types/whiteboard'
 import { useContext } from 'react'
 import { SocketContext } from '@/context/SocketProvider'
+import { TOAST_DURATION } from '@/libs/constants'
+import { useToast } from '@/hooks/use-toast'
 
 function OptionsBar({
   whiteboard,
@@ -21,6 +23,8 @@ function OptionsBar({
   setWhiteboard: React.Dispatch<React.SetStateAction<IWhiteboard>>
 }) {
   const { socket } = useContext(SocketContext)
+
+  const { toast } = useToast()
 
   const { changeWhiteboardVisibility } = useWhiteboard()
 
@@ -43,6 +47,39 @@ function OptionsBar({
     setWhiteboard((prev) => {
       return { ...prev, visibility: newVisibility }
     })
+  }
+
+  const handleClearWhiteboard = async () => {
+    try {
+      const res = await socket?.emitWithAck('whiteboard:clear', whiteboard.id)
+      if (res.status === 404) {
+        return toast({
+          title: 'Error',
+          description: res.error,
+          duration: TOAST_DURATION,
+          variant: 'destructive',
+        })
+      }
+      if (res.status !== 200) {
+        return toast({
+          title: 'Error',
+          description: res.error,
+          duration: TOAST_DURATION,
+          variant: 'destructive',
+        })
+      }
+      setWhiteboard((prev) => {
+        return { ...prev, content: [] }
+      })
+    } catch (err: unknown) {
+      const error = err as Error
+      toast({
+        title: 'Error',
+        description: error.message || error,
+        duration: TOAST_DURATION,
+        variant: 'destructive',
+      })
+    }
   }
 
   return (
@@ -76,7 +113,7 @@ function OptionsBar({
               <MenubarSeparator />
             </>
           )}
-          <MenubarItem>
+          <MenubarItem onClick={handleClearWhiteboard}>
             Clear board <MenubarShortcut>⌘C</MenubarShortcut>
           </MenubarItem>
         </MenubarContent>

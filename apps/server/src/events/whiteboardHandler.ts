@@ -2,8 +2,6 @@ import { Server, Socket } from 'socket.io'
 import Whiteboard from '../models/Whiteboard'
 import WhiteboardLogger from '../libs/WhiteboardLogger'
 
-// TODO: Minimize whiteboard data sent. Avoid sending the entire whiteboard at every event.
-
 let storage: Whiteboard[] = []
 
 export const whiteboardHandler = (io: Server, socket: Socket) => {
@@ -54,6 +52,26 @@ export const whiteboardHandler = (io: Server, socket: Socket) => {
       socket.to(id).emit('whiteboard:render', element)
       console.log(element)
 
+      callback({
+        status: 200,
+      })
+    } catch (error) {
+      callback({ status: 500, error: 'Internal server error' })
+    }
+  })
+
+  socket.on('whiteboard:clear', (id: string, callback: Function) => {
+    if (!id) return callback({ status: 400, error: 'Missing whiteboard ID' })
+    try {
+      const wb = storage.find((wb) => wb.id === id)
+      if (!wb) {
+        return callback({
+          status: 404,
+          error: 'Whiteboard not found',
+        })
+      }
+      wb.content.splice(0, wb.content.length)
+      socket.to(id).emit('whiteboard:clear')
       callback({
         status: 200,
       })

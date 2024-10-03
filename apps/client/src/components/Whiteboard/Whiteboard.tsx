@@ -147,6 +147,13 @@ function Whiteboard({
     })
   })
 
+  socket.on('whiteboard:clear', () => {
+    console.log('received clear order')
+    setWhiteboard((prev) => {
+      return { ...prev, content: [] }
+    })
+  })
+
   return (
     <>
       {/* {import.meta.env.VITE_PROD && (
