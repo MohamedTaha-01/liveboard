@@ -105,9 +105,24 @@ function WhiteboardPage() {
         setWhiteboard((prev) => {
           return { ...prev, visibility: newVisibility }
         })
-
         if (socket.id === whiteboard.owner) return
-        console.log('You have been kicked from this whiteboard')
+        toast({
+          title: 'You have been kicked from this whiteboard.',
+          description: 'This whiteboard is now private.',
+          duration: TOAST_DURATION,
+          variant: 'default',
+        })
+        navigate('/')
+      })
+
+      socket.io.on('reconnect_failed', () => {
+        toast({
+          title: 'Unable to reconnect',
+          description: 'Try again later.',
+          duration: TOAST_DURATION,
+          variant: 'destructive',
+        })
+        if (location.pathname === '/') return
         navigate('/')
       })
 

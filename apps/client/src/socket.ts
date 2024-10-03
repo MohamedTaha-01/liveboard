@@ -5,4 +5,5 @@ const URL =
 
 export const s: Socket = io(URL, {
   withCredentials: true,
+  reconnectionAttempts: 10,
 })
