@@ -2,7 +2,7 @@ import { IWhiteboard, IWhiteboardContext } from '@/types/whiteboard'
 import { createContext, useContext, useState } from 'react'
 import { SocketContext } from './SocketProvider'
 import { TSocketResponse } from '@/types/types'
-import { useSocketEvents } from '@/hooks/useSocketEvents'
+import { useSocket } from '@/hooks/useSocket'
 
 export const WhiteboardContext = createContext<IWhiteboardContext | undefined>(
   undefined
@@ -18,13 +18,25 @@ function WhiteboardProvider({ children }: { children: React.ReactNode }) {
 
   const { socket } = useContext(SocketContext)!
 
-  const { emitJoinWhiteboard } = useSocketEvents()
+  const { emitCreateWhiteboard, emitJoinWhiteboard, emitChangeVisibility } =
+    useSocket()
+
+  const createWhiteboard = async (): Promise<TSocketResponse> => {
+    return await emitCreateWhiteboard()
+  }
 
   const joinWhiteboard = async (id: string) => {
     if (!id) throw new Error('Missing whiteboard ID')
     const res: TSocketResponse = await emitJoinWhiteboard(id)
     if (res.status !== 200) throw new Error(res.error)
     setWhiteboard(res.whiteboard)
+  }
+
+  const changeWhiteboardVisibility = async (
+    id: string,
+    newVisibility: string
+  ): Promise<TSocketResponse> => {
+    return await emitChangeVisibility(id, newVisibility)
   }
 
   const clearWhiteboard = async () => {
@@ -37,7 +49,14 @@ function WhiteboardProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <WhiteboardContext.Provider
-      value={{ whiteboard, setWhiteboard, joinWhiteboard, clearWhiteboard }}
+      value={{
+        whiteboard,
+        setWhiteboard,
+        createWhiteboard,
+        joinWhiteboard,
+        changeWhiteboardVisibility,
+        clearWhiteboard,
+      }}
     >
       {children}
     </WhiteboardContext.Provider>

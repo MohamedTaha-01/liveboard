@@ -3,17 +3,15 @@ import { SocketContext } from '../context/SocketProvider'
 import { TSocketResponse } from '../types/types'
 import { TIMEOUT_DELAY } from '../libs/constants'
 
-export const useSocketEvents = () => {
+export const useSocket = () => {
   const { socket } = useContext(SocketContext)
 
   const _checkSocketConnection = (): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      if (!socket) {
-        reject('Unable to establish connection with the server.')
-      } else {
-        resolve()
-      }
-    })
+    return new Promise((resolve, reject) =>
+      socket
+        ? resolve()
+        : reject('Unable to establish connection with the server.')
+    )
   }
 
   const emitCreateWhiteboard = async (): Promise<TSocketResponse> => {

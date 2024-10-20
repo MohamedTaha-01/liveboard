@@ -5,14 +5,12 @@ import {
   TPosition,
   TSocketResponse,
 } from '../../types/types'
-import { Fragment, useContext, useRef } from 'react'
+import { useContext, useRef } from 'react'
 import { Stage as TStage } from 'konva/lib/Stage'
 import { SocketContext } from '../../context/SocketProvider'
 import { ToolSettingsContext } from '../../context/ToolSettingsProvider'
-import { IWhiteboard } from '../../types/whiteboard'
 import { TIMEOUT_DELAY, TOAST_DURATION } from '../../libs/constants'
 import LineRenderer from './LineRenderer'
-import RectRenderer from './RectRenderer'
 import { useToast } from '@/hooks/use-toast'
 import { WhiteboardContext } from '@/context/WhiteboardProvider'
 

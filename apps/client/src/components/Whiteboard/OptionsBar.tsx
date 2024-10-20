@@ -1,4 +1,3 @@
-import { useWhiteboard } from '@/hooks/useWhiteboard'
 import {
   Menubar,
   MenubarContent,
@@ -12,6 +11,7 @@ import { Switch } from '../ui/switch'
 import { IWhiteboard } from '@/types/whiteboard'
 import { useContext } from 'react'
 import { SocketContext } from '@/context/SocketProvider'
+import { WhiteboardContext } from '@/context/WhiteboardProvider'
 
 function OptionsBar({
   whiteboard,
@@ -24,9 +24,10 @@ function OptionsBar({
 }) {
   const { socket } = useContext(SocketContext)
 
-  const { changeWhiteboardVisibility } = useWhiteboard()
+  const { changeWhiteboardVisibility } = useContext(WhiteboardContext)!
 
   const handleChangeVisibility = async () => {
+    if (!whiteboard.id) return
     const oldVisibility = whiteboard.visibility
     const newVisibility =
       whiteboard.visibility === 'public' ? 'private' : 'public'

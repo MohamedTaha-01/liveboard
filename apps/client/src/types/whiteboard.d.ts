@@ -1,4 +1,4 @@
-import { TWhiteboardElement } from './types'
+import { TSocketResponse, TWhiteboardElement } from './types'
 
 export interface IWhiteboard {
   id: string | undefined
@@ -10,7 +10,9 @@ export interface IWhiteboard {
 export interface IWhiteboardContext {
   whiteboard: IWhiteboard
   setWhiteboard: React.Dispatch<React.SetStateAction<IWhiteboard>>
+  createWhiteboard: () => Promise<TSocketResponse>
   joinWhiteboard: (id: string) => void
+  changeWhiteboardVisibility: (id: string, newVisibility: string) => void
   clearWhiteboard: () => void
 }
 

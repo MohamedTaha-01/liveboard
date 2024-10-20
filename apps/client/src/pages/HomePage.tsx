@@ -1,7 +1,6 @@
 import { useContext, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TSocketResponse } from '../types/types'
-import { useWhiteboard } from '../hooks/useWhiteboard'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
@@ -9,9 +8,10 @@ import { TOAST_DURATION } from '@/libs/constants'
 import { SocketContext } from '@/context/SocketProvider'
 import { ChevronsDown } from 'lucide-react'
 import { validateWhiteboardCode } from '@/lib/utils'
+import { WhiteboardContext } from '@/context/WhiteboardProvider'
 
 function HomePage() {
-  const { createWhiteboard } = useWhiteboard()
+  const { createWhiteboard } = useContext(WhiteboardContext)!
   const navigate = useNavigate()
   const { toast } = useToast()
 
