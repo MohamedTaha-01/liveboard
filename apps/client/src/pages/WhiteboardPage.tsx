@@ -22,7 +22,7 @@ function WhiteboardPage() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const { toast } = useToast()
+  const { errorToast, toast } = useToast()
 
   const { whiteboard, setWhiteboard, joinWhiteboard, clearWhiteboard } =
     useContext(WhiteboardContext)!
@@ -34,12 +34,7 @@ function WhiteboardPage() {
       const whiteboardCode = location.pathname.split('/whiteboards/')[1]
       joinWhiteboard(whiteboardCode)
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: error.message,
-        duration: TOAST_DURATION,
-        variant: 'destructive',
-      })
+      errorToast(error.message)
       navigate(`/`)
     }
   }
@@ -48,12 +43,7 @@ function WhiteboardPage() {
     try {
       clearWhiteboard()
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: error.message,
-        duration: TOAST_DURATION,
-        variant: 'destructive',
-      })
+      errorToast(error.message)
     }
   }
 
@@ -66,12 +56,7 @@ function WhiteboardPage() {
         visibility: 'private',
       })
       if (!hasShownToast) {
-        toast({
-          title: 'Connection lost',
-          description: 'Trying to reconnect...',
-          duration: TOAST_DURATION,
-          variant: 'destructive',
-        })
+        errorToast('Trying to reconnect...', 'Connection lost')
         setHasShownToast(true)
       }
       return
@@ -96,12 +81,7 @@ function WhiteboardPage() {
       })
 
       socket.io.on('reconnect_failed', () => {
-        toast({
-          title: 'Unable to reconnect',
-          description: 'Try again later.',
-          duration: TOAST_DURATION,
-          variant: 'destructive',
-        })
+        errorToast('Try again later.', 'Unable to reconnect')
         setConnectionState(EConnectionState.Disconnected)
         setSocket(undefined)
       })

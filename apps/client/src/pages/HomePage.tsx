@@ -4,7 +4,6 @@ import { WhiteboardContext } from '@/context/WhiteboardProvider'
 import { useToast } from '@/hooks/use-toast'
 import { useSocket } from '@/hooks/useSocket'
 import { validateWhiteboardCode } from '@/lib/utils'
-import { TOAST_DURATION } from '@/libs/constants'
 import { ChevronsDown } from 'lucide-react'
 import { useContext, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -12,54 +11,30 @@ import { TSocketResponse } from '../types/types'
 
 function HomePage() {
   const { createWhiteboard } = useContext(WhiteboardContext)!
-  const navigate = useNavigate()
-  const { toast } = useToast()
-
+  const { errorToast } = useToast()
   const { emitWhiteboardCheck } = useSocket()
+  const navigate = useNavigate()
 
   const wbCodeInputRef = useRef<HTMLInputElement>(null)
 
   const handleWhiteboardCreate = async () => {
     try {
       const res: TSocketResponse = await createWhiteboard()
-      if (res.status !== 201)
-        return toast({
-          title: 'Error',
-          description: res.error,
-          duration: TOAST_DURATION,
-          variant: 'destructive',
-        })
+      if (res.status !== 201) return errorToast(res.error)
       navigate(`/whiteboards/${res.whiteboard.id}`)
     } catch (err: unknown) {
       const error = err as Error
-      toast({
-        title: 'Error',
-        description: error.message || error,
-        duration: TOAST_DURATION,
-        variant: 'destructive',
-      })
+      return errorToast(error.message || (error as unknown as string))
     }
   }
 
   const handleWhiteboardJoin = async () => {
     const id = wbCodeInputRef.current?.value
-    if (validateWhiteboardCode(id))
-      return toast({
-        title: 'Error',
-        description: 'Invalid code',
-        duration: TOAST_DURATION,
-        variant: 'destructive',
-      })
+    if (validateWhiteboardCode(id)) return errorToast('Invalid code')
 
     const res = await emitWhiteboardCheck(id as string)
-    if (res.status !== 200) {
-      return toast({
-        title: 'Error',
-        description: res.error || 'An error has occurred',
-        duration: TOAST_DURATION,
-        variant: 'destructive',
-      })
-    }
+    if (res.status !== 200) return errorToast(res.error)
+
     navigate(`/whiteboards/${wbCodeInputRef.current?.value}`)
   }
 
