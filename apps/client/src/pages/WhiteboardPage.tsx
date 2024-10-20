@@ -2,10 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import Whiteboard from '../components/Whiteboard/Whiteboard'
 import { SocketContext } from '../context/SocketProvider'
 import { useContext, useEffect, useState } from 'react'
-import { TSocketResponse } from '../types/types'
 import ToolSettings from '../components/Whiteboard/ToolSettings'
-import { IWhiteboard } from '../types/whiteboard'
-import { useWhiteboard } from '../hooks/useWhiteboard'
 import { EConnectionState } from '../enums/enums'
 import OptionsBar from '@/components/Whiteboard/OptionsBar'
 import MouseCircle from '@/components/Whiteboard/MouseCircle'
@@ -20,7 +17,6 @@ import { WhiteboardContext } from '@/context/WhiteboardProvider'
 function WhiteboardPage() {
   const { socket, setSocket, connectionState, setConnectionState } =
     useContext(SocketContext)!
-  const { joinWhiteboard } = useWhiteboard()
   const toolSettings = useContext(ToolSettingsContext)
 
   const location = useLocation()
@@ -28,51 +24,19 @@ function WhiteboardPage() {
 
   const { toast } = useToast()
 
-  const { whiteboard, setWhiteboard, clearWhiteboard } =
+  const { whiteboard, setWhiteboard, joinWhiteboard, clearWhiteboard } =
     useContext(WhiteboardContext)!
   const [showToolSettings, setShowToolSettings] = useState(false)
   const [hasShownToast, setHasShownToast] = useState(false)
 
-  const handleJoinWhiteboard = async () => {
+  const handleJoinWhiteboard = () => {
     try {
       const whiteboardCode = location.pathname.split('/whiteboards/')[1]
-      const res: TSocketResponse = await joinWhiteboard(whiteboardCode)
-      switch (res.status) {
-        case 200:
-          setWhiteboard(res.whiteboard)
-          break
-        case 404:
-          toast({
-            title: 'Error',
-            description: res.error,
-            duration: TOAST_DURATION,
-            variant: 'destructive',
-          })
-          navigate(`/`)
-          break
-        case 403:
-          toast({
-            title: 'Error',
-            description: res.error,
-            duration: TOAST_DURATION,
-            variant: 'destructive',
-          })
-          navigate(`/`)
-          break
-        default:
-          toast({
-            title: 'Error',
-            description: 'Oops! There was an error!',
-            duration: TOAST_DURATION,
-            variant: 'destructive',
-          })
-          navigate(`/`)
-          break
-      }
-    } catch (err: unknown) {
+      joinWhiteboard(whiteboardCode)
+    } catch (error) {
       toast({
         title: 'Error',
-        description: err as string,
+        description: error.message,
         duration: TOAST_DURATION,
         variant: 'destructive',
       })

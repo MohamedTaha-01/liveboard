@@ -10,6 +10,7 @@ export interface IWhiteboard {
 export interface IWhiteboardContext {
   whiteboard: IWhiteboard
   setWhiteboard: React.Dispatch<React.SetStateAction<IWhiteboard>>
+  joinWhiteboard: (id: string) => void
   clearWhiteboard: () => void
 }
 
