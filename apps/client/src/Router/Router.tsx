@@ -1,7 +1,7 @@
+import HomePage from '@/pages/HomePage'
+import NoMatchPage from '@/pages/NoMatchPage'
+import WhiteboardPage from '@/pages/WhiteboardPage'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import HomePage from '../../pages/HomePage'
-import WhiteboardPage from '../../pages/WhiteboardPage'
-import NoMatchPage from '../../pages/NoMatchPage'
 
 function Router() {
   return (

@@ -1,6 +1,5 @@
-import DebugMenu from './components/DebugMenu/DebugMenu'
-import Router from './components/Router/Router'
 import { Toaster } from './components/ui/toaster'
+import Router from './Router/Router'
 
 function App() {
   return (
