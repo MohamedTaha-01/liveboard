@@ -50,5 +50,21 @@ export const useSocket = () => {
     }
   }
 
-  return { emitCreateWhiteboard, emitJoinWhiteboard, emitChangeVisibility }
+  const emitWhiteboardCheck = async (id: string): Promise<TSocketResponse> => {
+    await __checkSocketConnection()
+    try {
+      return await socket!
+        .timeout(TIMEOUT_DELAY)
+        .emitWithAck('whiteboard:check', id)
+    } catch (_error) {
+      return Promise.reject('Timeout error')
+    }
+  }
+
+  return {
+    emitCreateWhiteboard,
+    emitJoinWhiteboard,
+    emitChangeVisibility,
+    emitWhiteboardCheck,
+  }
 }

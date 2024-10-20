@@ -5,17 +5,17 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
 import { TOAST_DURATION } from '@/libs/constants'
-import { SocketContext } from '@/context/SocketProvider'
 import { ChevronsDown } from 'lucide-react'
 import { validateWhiteboardCode } from '@/lib/utils'
 import { WhiteboardContext } from '@/context/WhiteboardProvider'
+import { useSocket } from '@/hooks/useSocket'
 
 function HomePage() {
   const { createWhiteboard } = useContext(WhiteboardContext)!
   const navigate = useNavigate()
   const { toast } = useToast()
 
-  const { socket } = useContext(SocketContext)
+  const { emitWhiteboardCheck } = useSocket()
 
   const wbCodeInputRef = useRef<HTMLInputElement>(null)
 
@@ -42,7 +42,8 @@ function HomePage() {
   }
 
   const handleWhiteboardJoin = async () => {
-    if (validateWhiteboardCode(wbCodeInputRef.current?.value))
+    const id = wbCodeInputRef.current?.value
+    if (validateWhiteboardCode(id))
       return toast({
         title: 'Error',
         description: 'Invalid code',
@@ -50,10 +51,7 @@ function HomePage() {
         variant: 'destructive',
       })
 
-    const res = await socket?.emitWithAck(
-      'whiteboard:check',
-      wbCodeInputRef.current?.value
-    )
+    const res = await emitWhiteboardCheck(id as string)
     if (res.status !== 200) {
       return toast({
         title: 'Error',
