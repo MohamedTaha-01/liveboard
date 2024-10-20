@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast'
 import { TOAST_DURATION } from '@/libs/constants'
 import { SocketContext } from '@/context/SocketProvider'
 import { ChevronsDown } from 'lucide-react'
+import { validateWhiteboardCode } from '@/lib/utils'
 
 function HomePage() {
   const { createWhiteboard } = useWhiteboard()
@@ -41,14 +42,14 @@ function HomePage() {
   }
 
   const handleWhiteboardJoin = async () => {
-    if (!wbCodeInputRef.current?.value) {
+    if (validateWhiteboardCode(wbCodeInputRef.current?.value))
       return toast({
         title: 'Error',
         description: 'Invalid code',
         duration: TOAST_DURATION,
         variant: 'destructive',
       })
-    }
+
     const res = await socket?.emitWithAck(
       'whiteboard:check',
       wbCodeInputRef.current?.value
