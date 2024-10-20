@@ -1,14 +1,14 @@
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { WhiteboardContext } from '@/context/WhiteboardProvider'
+import { useToast } from '@/hooks/use-toast'
+import { useSocket } from '@/hooks/useSocket'
+import { validateWhiteboardCode } from '@/lib/utils'
+import { TOAST_DURATION } from '@/libs/constants'
+import { ChevronsDown } from 'lucide-react'
 import { useContext, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TSocketResponse } from '../types/types'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { useToast } from '@/hooks/use-toast'
-import { TOAST_DURATION } from '@/libs/constants'
-import { ChevronsDown } from 'lucide-react'
-import { validateWhiteboardCode } from '@/lib/utils'
-import { WhiteboardContext } from '@/context/WhiteboardProvider'
-import { useSocket } from '@/hooks/useSocket'
 
 function HomePage() {
   const { createWhiteboard } = useContext(WhiteboardContext)!
