@@ -14,15 +14,11 @@ import { TIMEOUT_DELAY, TOAST_DURATION } from '../../libs/constants'
 import LineRenderer from './LineRenderer'
 import RectRenderer from './RectRenderer'
 import { useToast } from '@/hooks/use-toast'
+import { WhiteboardContext } from '@/context/WhiteboardProvider'
 
-function Whiteboard({
-  whiteboard,
-  setWhiteboard,
-}: {
-  whiteboard: IWhiteboard
-  setWhiteboard: React.Dispatch<React.SetStateAction<IWhiteboard>>
-}) {
+function Whiteboard() {
   const { socket } = useContext(SocketContext)!
+  const { whiteboard, setWhiteboard } = useContext(WhiteboardContext)!
 
   const { toast } = useToast()
 

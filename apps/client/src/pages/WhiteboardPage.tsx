@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button'
 import { ChevronRightIcon, X } from 'lucide-react'
 import { TOAST_DURATION } from '@/libs/constants'
 import { useToast } from '@/hooks/use-toast'
+import { WhiteboardContext } from '@/context/WhiteboardProvider'
 
 function WhiteboardPage() {
   const { socket, setSocket, connectionState, setConnectionState } =
@@ -27,12 +28,7 @@ function WhiteboardPage() {
 
   const { toast } = useToast()
 
-  const [whiteboard, setWhiteboard] = useState<IWhiteboard>({
-    id: undefined,
-    owner: undefined,
-    content: [],
-    visibility: 'private',
-  })
+  const { whiteboard, setWhiteboard } = useContext(WhiteboardContext)!
   const [showToolSettings, setShowToolSettings] = useState(false)
   const [hasShownToast, setHasShownToast] = useState(false)
 
@@ -173,7 +169,7 @@ function WhiteboardPage() {
   return (
     (socket && (
       <div className="overflow-hidden">
-        <Whiteboard whiteboard={whiteboard} setWhiteboard={setWhiteboard} />
+        <Whiteboard />
         <OptionsBar
           whiteboard={whiteboard}
           setWhiteboard={setWhiteboard}
