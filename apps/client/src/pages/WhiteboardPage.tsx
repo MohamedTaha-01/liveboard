@@ -28,7 +28,8 @@ function WhiteboardPage() {
 
   const { toast } = useToast()
 
-  const { whiteboard, setWhiteboard } = useContext(WhiteboardContext)!
+  const { whiteboard, setWhiteboard, clearWhiteboard } =
+    useContext(WhiteboardContext)!
   const [showToolSettings, setShowToolSettings] = useState(false)
   const [hasShownToast, setHasShownToast] = useState(false)
 
@@ -79,33 +80,13 @@ function WhiteboardPage() {
     }
   }
 
-  const handleClearWhiteboard = async () => {
+  const handleClearWhiteboard = () => {
     try {
-      const res = await socket?.emitWithAck('whiteboard:clear', whiteboard.id)
-      if (res.status === 404) {
-        return toast({
-          title: 'Error',
-          description: res.error,
-          duration: TOAST_DURATION,
-          variant: 'destructive',
-        })
-      }
-      if (res.status !== 200) {
-        return toast({
-          title: 'Error',
-          description: res.error,
-          duration: TOAST_DURATION,
-          variant: 'destructive',
-        })
-      }
-      setWhiteboard((prev) => {
-        return { ...prev, content: [] }
-      })
-    } catch (err: unknown) {
-      const error = err as Error
+      clearWhiteboard()
+    } catch (error) {
       toast({
         title: 'Error',
-        description: error.message || error,
+        description: error.message,
         duration: TOAST_DURATION,
         variant: 'destructive',
       })
