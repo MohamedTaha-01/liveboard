@@ -1,12 +1,9 @@
-import { Toaster } from './components/ui/toaster'
-import Router from './Router/Router'
+import Router from './router/router'
 
 function App() {
   return (
     <main>
       <Router />
-      <Toaster />
-      {/* {import.meta.env.VITE_PROD && <DebugMenu />} */}
     </main>
   )
 }
