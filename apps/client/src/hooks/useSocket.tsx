@@ -6,7 +6,7 @@ import { TIMEOUT_DELAY } from '../libs/constants'
 export const useSocket = () => {
   const { socket } = useContext(SocketContext)
 
-  const _checkSocketConnection = (): Promise<void> => {
+  const __checkSocketConnection = (): Promise<void> => {
     return new Promise((resolve, reject) =>
       socket
         ? resolve()
@@ -15,23 +15,23 @@ export const useSocket = () => {
   }
 
   const emitCreateWhiteboard = async (): Promise<TSocketResponse> => {
-    await _checkSocketConnection()
+    await __checkSocketConnection()
     try {
       return await socket!
         .timeout(TIMEOUT_DELAY)
         .emitWithAck('whiteboard:create')
-    } catch (error) {
+    } catch (_error) {
       return Promise.reject('Timeout error')
     }
   }
 
   const emitJoinWhiteboard = async (id: string): Promise<TSocketResponse> => {
-    await _checkSocketConnection()
+    await __checkSocketConnection()
     try {
       return await socket!
         .timeout(TIMEOUT_DELAY)
         .emitWithAck('whiteboard:join', id)
-    } catch (error) {
+    } catch (_error) {
       return Promise.reject('Timeout error')
     }
   }
@@ -40,12 +40,12 @@ export const useSocket = () => {
     id: string,
     visibility: string
   ): Promise<TSocketResponse> => {
-    await _checkSocketConnection()
+    await __checkSocketConnection()
     try {
       return await socket!
         .timeout(TIMEOUT_DELAY)
         .emitWithAck('whiteboard:change-visibility', id, visibility)
-    } catch (error) {
+    } catch (_error) {
       return Promise.reject('Timeout error')
     }
   }
