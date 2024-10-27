@@ -1,6 +1,6 @@
-import Whiteboard from '@/components/Whiteboard'
-import WhiteboardOptions from '@/components/WhiteboardOptions'
-import WhiteboardTools from '@/components/WhiteboardTools'
+import Whiteboard from '@/components/Whiteboard/Whiteboard'
+import WhiteboardOptions from '@/components/Whiteboard/WhiteboardOptions'
+import WhiteboardTools from '@/components/Whiteboard/WhiteboardTools'
 
 function WhiteboardPage() {
   return (

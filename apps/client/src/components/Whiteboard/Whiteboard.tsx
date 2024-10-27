@@ -1,7 +1,7 @@
 import useWhiteboard from '@/hooks/useWhiteboard'
 import { useRef } from 'react'
 import { Stage, Layer } from 'react-konva'
-import LineRenderer from './LineRenderer'
+import LineRenderer from './Renderers/LineRenderer'
 
 function Whiteboard() {
   const { whiteboard } = useWhiteboard()

@@ -6,8 +6,8 @@ import {
   MenubarSeparator,
   MenubarShortcut,
   MenubarTrigger,
-} from './ui/menubar'
-import { Switch } from './ui/switch'
+} from '../ui/menubar'
+import { Switch } from '../ui/switch'
 
 function WhiteboardOptions() {
   return (
