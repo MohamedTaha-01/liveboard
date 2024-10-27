@@ -1,23 +1,27 @@
 import { ILine } from '@/types/ILine'
 import { TPosition } from '@/types/TPosition'
-import { useState } from 'react'
+import { useState, useCallback, useRef } from 'react'
 
 interface IWhiteboard {
   id: string | undefined
   owner: string | undefined
-  content: Array<ILine>
   visibility: 'private' | 'public'
 }
 
 function useWhiteboard() {
-  const [whiteboard, setWhiteboard] = useState<IWhiteboard>({
-    id: undefined,
-    owner: undefined,
-    content: [],
-    visibility: 'private',
-  })
+  const [whiteboardProperties, setWhiteboardProperties] = useState<IWhiteboard>(
+    {
+      id: undefined,
+      owner: undefined,
+      visibility: 'private',
+    }
+  )
+  const [whiteboardContent, setWhiteboardContent] = useState<ILine[]>([])
 
-  const beginDraw = (pos: TPosition) => {
+  const lastUpdateRef = useRef(0)
+  const rafRef = useRef<number | null>(null)
+
+  const beginDraw = useCallback((pos: TPosition) => {
     const newLine: ILine = {
       attrs: {
         points: [pos.x, pos.y],
@@ -30,29 +34,36 @@ function useWhiteboard() {
       },
       className: 'Line',
     }
+    setWhiteboardContent((prevContent) => [...prevContent, newLine])
+  }, [])
 
-    setWhiteboard((prev) => {
-      return {
-        ...prev,
-        content: [...prev.content, newLine],
-      }
+  const continueDraw = useCallback((point: TPosition) => {
+    if (Date.now() - lastUpdateRef.current < 16) return // throttle to ~60fps
+    lastUpdateRef.current = Date.now()
+
+    // Cancel any queued animation frame to avoid overlap
+    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+
+    rafRef.current = requestAnimationFrame(() => {
+      setWhiteboardContent((prevContent) => {
+        const lastLine = { ...prevContent[prevContent.length - 1] }
+        lastLine.attrs.points = lastLine.attrs.points.concat([point.x, point.y])
+        return [...prevContent.slice(0, -1), lastLine]
+      })
     })
+  }, [])
+
+  const endDraw = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current)
+  }, [])
+
+  return {
+    whiteboardProperties,
+    whiteboardContent,
+    beginDraw,
+    continueDraw,
+    endDraw,
   }
-
-  const continueDraw = (point: TPosition) => {
-    setWhiteboard((prev) => {
-      const lastLine: ILine = prev.content.at(-1) as ILine
-      // add point to last line
-      lastLine.attrs.points = lastLine.attrs.points.concat([point.x, point.y])
-      // replace last
-      whiteboard.content.splice(whiteboard.content.length - 1, 1, lastLine)
-      return { ...prev, content: [...prev.content.slice(0, -1), lastLine] }
-    })
-  }
-
-  const endDraw = () => {}
-
-  return { whiteboard, beginDraw, continueDraw, endDraw }
 }
 
 export default useWhiteboard

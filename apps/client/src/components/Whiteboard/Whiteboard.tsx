@@ -7,7 +7,7 @@ import { TPosition } from '@/types/TPosition'
 import useWindowSize from '@/hooks/useWindowSize'
 
 function Whiteboard() {
-  const { whiteboard, beginDraw, continueDraw } = useWhiteboard()
+  const { whiteboardContent, beginDraw, continueDraw } = useWhiteboard()
   const { windowSize } = useWindowSize()
 
   const isDrawing = useRef(false)
@@ -44,8 +44,8 @@ function Whiteboard() {
       className="w-full h-full bg-background overflow-hidden"
     >
       <Layer>
-        {whiteboard.content &&
-          whiteboard.content.map((element, i) => (
+        {whiteboardContent &&
+          whiteboardContent.map((element, i) => (
             // <Fragment key={i}>
             <LineRenderer key={`line-${i}`} element={element} />
             /* <RectRenderer
