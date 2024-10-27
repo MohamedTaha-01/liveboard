@@ -18,24 +18,23 @@ function useWhiteboard() {
   })
 
   const beginDraw = (pos: TPosition) => {
+    const newLine: ILine = {
+      attrs: {
+        points: [pos.x, pos.y],
+        stroke: '#ff0000',
+        strokeWidth: 8,
+        tension: 0.5,
+        lineCap: 'round',
+        lineJoin: 'round',
+        globalCompositeOperation: 'pen',
+      },
+      className: 'Line',
+    }
+
     setWhiteboard((prev) => {
       return {
         ...prev,
-        content: [
-          ...whiteboard.content,
-          {
-            attrs: {
-              points: [pos.x, pos.y],
-              stroke: '#ff0000',
-              strokeWidth: 8,
-              tension: 0.5,
-              lineCap: 'round',
-              lineJoin: 'round',
-              globalCompositeOperation: 'pen',
-            },
-            className: 'Line',
-          },
-        ],
+        content: [...prev.content, newLine],
       }
     })
   }
