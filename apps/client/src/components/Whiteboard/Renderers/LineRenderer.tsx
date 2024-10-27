@@ -1,6 +1,7 @@
+import { ILine } from '@/types/ILine'
 import { Line } from 'react-konva'
 
-function LineRenderer({ element }: { element }) {
+function LineRenderer({ element }: { element: ILine }) {
   if (element.className !== 'Line') return null
   return (
     <Line
@@ -8,8 +9,8 @@ function LineRenderer({ element }: { element }) {
       stroke={element.attrs.stroke}
       strokeWidth={element.attrs.strokeWidth}
       tension={element.attrs.tension}
-      lineCap={element.attrs.lineCap}
-      lineJoin={element.attrs.lineJoin}
+      lineCap="round"
+      lineJoin="round"
       globalCompositeOperation={
         element.attrs.globalCompositeOperation === 'destination-out'
           ? 'destination-out'
