@@ -17,22 +17,24 @@ function WhiteboardOptions() {
         <MenubarContent>
           <MenubarItem>Import</MenubarItem>
           <MenubarItem>Export</MenubarItem>
-          <MenubarSeparator />
           <MenubarItem>Download</MenubarItem>
+          <MenubarSeparator />
+          <MenubarItem>Exit</MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+      <MenubarMenu>
+        <MenubarTrigger>Visibility</MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem>
+            Public
+            <MenubarShortcut>⌘V</MenubarShortcut>&nbsp;
+            <Switch />
+          </MenubarItem>
         </MenubarContent>
       </MenubarMenu>
       <MenubarMenu>
         <MenubarTrigger>Board</MenubarTrigger>
         <MenubarContent>
-          <>
-            <MenubarItem>
-              Public
-              <MenubarShortcut>⌘V</MenubarShortcut>&nbsp;
-              <Switch />
-            </MenubarItem>
-            <MenubarSeparator />
-          </>
-
           <MenubarItem>
             Clear board <MenubarShortcut>⌘C</MenubarShortcut>
           </MenubarItem>
