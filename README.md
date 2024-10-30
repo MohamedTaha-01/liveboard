@@ -42,6 +42,8 @@ LiveBoard is a web application that allows users to create and manage digital wh
   - konvajs
   - shadcn
 
+## Changelog
+
 ## Contact
 
 ## Media
