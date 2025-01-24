@@ -13,7 +13,6 @@
 - [What is LiveBoard?](#what-is-liveboard)
 - [Functionalities](#functionalities)
 - [Tech Stack](#tech-stack)
-- [Changelog](#changelog)
 - [Media](#media)
 - [Contact](#contact)
 
@@ -53,8 +52,8 @@ LiveBoard is a web application that allows users to create and manage digital wh
   - konvajs
   - shadcn
 
-## Changelog
-
 ## Contact
+Mohammed Taha Hasan
+mohammedtaha.mt01@gmail.com
 
 ## Media
