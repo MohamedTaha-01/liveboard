@@ -1,10 +1,21 @@
 # LiveBoard
 
-Draw, plan, collaborate
+**Draw, plan, collaborate**
 
-LiveBoard brings the physical whiteboard to the digital world, making real-time collaboration easier for teams.
+*LiveBoard brings the physical whiteboard to the digital world, making real-time collaboration easier for teams.*
+
+>This project was developed within a strict 5-day time frame, presenting a challenge in terms of scope, design, and implementation. Despite the tight deadline, I was able to deliver a fully functional well-developed app, which I then presented to an audience.
+>
+>The app received positive feedback, with particular praise for its user interface and overall functionality.
 
 ## Contents
+
+- [What is LiveBoard?](#what-is-liveboard)
+- [Functionalities](#functionalities)
+- [Tech Stack](#tech-stack)
+- [Changelog](#changelog)
+- [Media](#media)
+- [Contact](#contact)
 
 ## What is LiveBoard?
 
