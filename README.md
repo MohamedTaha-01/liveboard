@@ -1,7 +1,6 @@
 # LiveBoard
 
-**Draw, plan, collaborate**
-
+**Draw, plan, collaborate**  
 *LiveBoard brings the physical whiteboard to the digital world, making real-time collaboration easier for teams.*
 
 >This project was developed within a strict 5-day time frame, presenting a challenge in terms of scope, design, and implementation. Despite the tight deadline, I was able to deliver a fully functional well-developed app, which I then presented to an audience.
@@ -53,7 +52,7 @@ LiveBoard is a web application that allows users to create and manage digital wh
   - shadcn
 
 ## Contact
-Mohammed Taha Hasan
+Mohammed Taha Hasan  
 mohammedtaha.mt01@gmail.com
 
 ## Media
